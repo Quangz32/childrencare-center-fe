@@ -21,11 +21,14 @@ const Navbar = () => {
   const isActive = (path: string) => pathname === path;
 
   const lastNavItemStyle = {
+    border: "1px solid #000",
     backgroundColor: "#0070F4", // Màu nền xanh
     borderRadius: "100px", // Bo viền
     boxShadow: "0.67px 1.33px 0px 0px #000000", // Đổ bóng
     color: "#fff",
     marginLeft: "8px",
+    fontWeight: "bold",
+    padding: "10px 16px",
   };
 
   return (
@@ -48,7 +51,7 @@ const Navbar = () => {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`px-[10px] py-[10px] rounded-md text-[1.5vh] font-[520] text-[#292E35] ${
+                className={`px-[10px] py-[10px] rounded-md text-base font-[550] text-[#292E35] ${
                   isActive(item.href)
                     ? "text-blue-600 bg-blue-50"
                     : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
