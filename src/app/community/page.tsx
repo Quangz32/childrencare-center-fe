@@ -9,14 +9,14 @@ export default function Page() {
     "........... Tuần này bạn đã dành bao nhiêu thời gian để học cùng với bé nhà mình rồi?";
   return (
     <Layout>
-      <div className="pt-10 flex flex-col items-center justify-center">
+      <div className="my-10 flex flex-col items-center justify-center">
         <h1 className="text-[#002249] text-4xl font-bold mb-10">
           Tham gia cộng đồng phát triển trẻ thơ
         </h1>
         {/* content */}
 
         <div
-          className="mx-10 flex flex-col items-center justify-center border-2 border-black 
+          className="flex flex-col items-center justify-center border-2 border-black 
         rounded-3xl shadow-[2px_3px_0px_0px_#000000] overflow-hidden"
         >
           <img
@@ -24,19 +24,19 @@ export default function Page() {
             alt="community"
             className="w-full"
           />
-          <div className="w-full px-24 py-12 bg-[#0070F4] border-t-[10px] border-[#83BCFF]">
-            <h2 className="text-white text-5xl font-bold">
+          <div className="w-full px-24 py-8 bg-[#0070F4] border-t-[10px] border-[#83BCFF]">
+            <h2 className="text-white text-4xl font-bold">
               Thắp sáng tương lai trẻ thơ
             </h2>
 
-            <div className="mt-6 flex flex-row justify-between">
+            <div className="mt-2 flex flex-row justify-between">
               <div className="flex flex-row items-center space-x-4">
                 <img
                   src="images/pilot_cat.png"
                   alt="avatar"
                   className="w-10 h-10 rounded-full"
                 />
-                <p className=" text-white font-bold text-xl">
+                <p className=" text-white font-[550] text-lg">
                   10 chuyên gia • 199 thành viên
                 </p>
               </div>

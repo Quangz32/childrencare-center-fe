@@ -74,20 +74,21 @@ export default function Page() {
         </h1>
 
         {/* Lịch yêu thương */}
-        <div className="flex flex-col w-[70%] shadow-[2px_4px_0px_0px_#000000] rounded-b-[24px]">
+        <div className="flex flex-col shadow-[2px_4px_0px_0px_#000000] rounded-b-[24px]">
           {/* Header */}
           <div
             className="flex flex-col items-center justify-center bg-[#FCE646] h-[100px]
            border-[4px] border-[#002249] relative"
           >
-            <h2 className="text-[#7B61FF] text-5xl font-[900] text-center mr-4">
+            <h2 className="text-[#7B61FF] text-xl sm:text-3xl md:text-5xl font-[900] text-center 
+            mr-4">
               Lịch yêu thương
             </h2>
             <div className="flex flex-row absolute right-10 top-1/2 transform -translate-y-1/2">
               {[1, 2, 3].map((item) => (
                 <div
                   key={item}
-                  className="bg-[#fff] border-[4px] border-[#002249] mx-4 rounded-full w-7 h-7  
+                  className="hidden md:block bg-[#fff] border-[4px] border-[#002249] mx-4 rounded-full w-7 h-7  
                   shadow-[2px_4px_0px_0px_#000000]"
                 ></div>
               ))}
@@ -99,10 +100,10 @@ export default function Page() {
             className="w-full p-10 flex flex-col items-center justify-center bg-[#fff]
             border-l-[4px] border-r-[4px] border-b-[4px] border-[#002249] rounded-b-[24px]"
           >
-            <div className="w-full grid grid-cols-3 gap-4">
+            <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {/* 1st card */}
               <Card {...cards[0]} />
-              <div className="col-span-2 h-[100px] p-4 ">
+              <div className="col-span-1 sm:col-span-1 md:col-span-2 h-[100px] p-4 ">
                 <p className=" text-[#002249] text-xl">
                   {lichyeuthuongMessage}
                 </p>
