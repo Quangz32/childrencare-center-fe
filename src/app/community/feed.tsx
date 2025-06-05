@@ -26,7 +26,7 @@ export default function Feed() {
         <img
           src="images/community/feed_img_1.jpg"
           alt="feed"
-          className="w-2/12 h-auto rounded-xl"
+          className="w-2/12 h-5/6 rounded-xl"
         />
       </div>
 
