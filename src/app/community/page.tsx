@@ -1,8 +1,6 @@
 "use client";
 
-import { useState } from "react";
 import Layout from "@/components/layout/Layout";
-import Card from "../progress/card";
 import RoundedButton from "@/components/common/RoundedButton";
 import Feed from "./feed";
 
