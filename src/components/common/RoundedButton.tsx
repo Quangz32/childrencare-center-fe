@@ -1,11 +1,9 @@
 export default function RoundedButton({
   text,
-  bgColor,
   onClick,
   className,
 }: {
   text: string;
-  bgColor: string;
   onClick: () => void;
   className?: string;
 }) {

@@ -117,7 +117,6 @@ export default function Page() {
         </div>
         <RoundedButton
           text="Thêm kỉ niệm"
-          bgColor="#002249"
           onClick={() => {}}
           className="mt-8 text-2xl"
         />
