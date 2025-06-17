@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    console.log("Connecting to database...");
+    // console.log("Connecting to database...");
     dbConnect();
 
     if (req.method === "GET") return GET(req, res);

@@ -1,12 +1,10 @@
 import dbConnect from "@/utils/mongodb";
 import UserModel from "@/models/User";
 import type { NextApiRequest, NextApiResponse } from "next";
-
-import type { NextRequest } from "next/server";
+import { headers } from "next/headers";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   try {
-    console.log("Connecting to database...");
     dbConnect();
 
     if (req.method === "GET") return GET(req, res);
@@ -19,6 +17,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
 async function GET(req: NextApiRequest, res: NextApiResponse) {
   try {
+    console.log("--- [id].GET", req.headers.user);
+
     const userId = req.query.id as string;
     const users = UserModel;
     const user = await users.findById(userId);
