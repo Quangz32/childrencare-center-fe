@@ -5,8 +5,21 @@ export async function middleware(request: NextRequest) {
   //SKIP AUTHENTICATION FOR THESE PAGES
   const pathname = request.nextUrl.pathname;
   console.log("--- go to Middleware filter: " + pathname);
-  const skipPrefix = ["/api/auth/login", "/api/auth/register"];
+
+  const PUBLIC_MODE = false;
+  if (PUBLIC_MODE) {
+    return NextResponse.next();
+  }
+  if (!pathname.startsWith("/api")) {
+    return NextResponse.next();
+  }
+
+  const skipPrefix = ["/api/auth/login", "/api/auth/register", "/", "favicon.ico"];
   if (skipPrefix.includes(pathname)) {
+    return NextResponse.next();
+  }
+
+  if (request.nextUrl.pathname === "/api/users" && request.method == "POST") {
     return NextResponse.next();
   }
 

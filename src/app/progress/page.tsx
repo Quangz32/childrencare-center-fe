@@ -3,6 +3,8 @@
 import Layout from "@/components/layout/Layout";
 import Card from "./card";
 import RoundedButton from "@/components/common/RoundedButton";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 const cards = [
   {
@@ -64,6 +66,25 @@ const cards = [
 ];
 
 export default function Page() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetchData();
+    // setIsClient(true);
+    // Call API ở đây
+    // fetchData().then(setData);
+  }, []);
+
+  const fetchData = async () => {
+    const token =
+      "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY4NTBlY2NhMGY2MTlhZTY1ZWFmYTQ5NSIsInJvbGUiOiJwYXJlbnQiLCJleHAiOjE3NTAzMDg3ODR9.3UszYqvNclXC1iVtYW5BDERhqk-CD6bVu7qgX9ZHcgI";
+    const response = await axios.get("http://localhost:3000/api/memories", {
+      headers: { Authorization: "Bearer " + token },
+    });
+    setData(response.data.allMemories);
+    console.log("--progress ", response.data.allMemories);
+  };
+
   const lichyeuthuongMessage =
     "........... Tuần này bạn đã dành bao nhiêu thời gian để học cùng với bé nhà mình rồi?";
   return (
@@ -80,8 +101,10 @@ export default function Page() {
             className="flex flex-col items-center justify-center bg-[#FCE646] h-[100px]
            border-[4px] border-[#002249] relative"
           >
-            <h2 className="text-[#7B61FF] text-xl sm:text-3xl md:text-5xl font-[900] text-center 
-            mr-4">
+            <h2
+              className="text-[#7B61FF] text-xl sm:text-3xl md:text-5xl font-[900] text-center 
+            mr-4"
+            >
               Lịch yêu thương
             </h2>
             <div className="flex flex-row absolute right-10 top-1/2 transform -translate-y-1/2">
@@ -104,9 +127,7 @@ export default function Page() {
               {/* 1st card */}
               <Card {...cards[0]} />
               <div className="col-span-1 sm:col-span-1 md:col-span-2 h-[100px] p-4 ">
-                <p className=" text-[#002249] text-xl">
-                  {lichyeuthuongMessage}
-                </p>
+                <p className=" text-[#002249] text-xl">{lichyeuthuongMessage}</p>
               </div>
               {/* 2nd -> N card */}
               {[1, 2, 3, 4, 5, 6].map((item) => (
@@ -115,11 +136,7 @@ export default function Page() {
             </div>
           </div>
         </div>
-        <RoundedButton
-          text="Thêm kỉ niệm"
-          onClick={() => {}}
-          className="mt-8 text-2xl"
-        />
+        <RoundedButton text="Thêm kỉ niệm" onClick={() => {}} className="mt-8 mb-8 text-2xl" />
       </div>
     </Layout>
   );
