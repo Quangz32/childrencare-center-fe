@@ -4,13 +4,13 @@ import UserModel from "@/models/User";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect();
     
-    const userId = params.id;
-    const user = await UserModel.findById(userId);
+    const { id } = await params;
+    const user = await UserModel.findById(id);
     
     if (!user) {
       return NextResponse.json(
@@ -31,12 +31,12 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect();
     
-    const userId = params.id;
+    const { id } = await params;
     const { fullName, gender, address } = await request.json();
     
     if (!fullName && !gender && !address) {
@@ -47,7 +47,7 @@ export async function PUT(
     }
 
     const updatedUser = await UserModel.findByIdAndUpdate(
-      userId,
+      id,
       { fullName, gender, address },
       { new: true }
     );
