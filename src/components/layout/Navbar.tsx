@@ -1,69 +1,127 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
+import RoundedButton from "@/components/common/RoundedButton";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const pathname = usePathname();
+  const { isAuthenticated, user, logout, isLoading } = useAuth();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!isDropdownOpen) return;
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
 
   const navItems = [
     { name: "Progress", title: "Theo dõi tiến độ", href: "/progress" },
     { name: "Guides", title: "Hướng dẫn", href: "/guides" },
     { name: "Centers", title: "Trung tâm cho bé", href: "/centers" },
-    // { name: "Community", title: "Cộng đồng", href: "/community" },
     { name: "Qa", title: "Trẻ hỏi chuyên gia trả lời", href: "/qa" },
     { name: "Solution", title: "Giải pháp", href: "/solution" },
-    { name: "Advisory", title: "Đăng ký tư vấn", href: "/advisory" },
   ];
 
   const isActive = (path: string) => pathname === path;
 
-  const lastNavItemStyle = {
-    border: "1px solid #000",
-    backgroundColor: "#0070F4", // Màu nền xanh
-    borderRadius: "100px", // Bo viền
-    boxShadow: "0.67px 1.33px 0px 0px #000000", // Đổ bóng
-    color: "#fff",
-    marginLeft: "8px",
-    fontWeight: "bold",
-    padding: "10px 16px",
-  };
-
   return (
-    <nav className="bg-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="bg-white border-b border-gray-100">
+      <div className="w-full px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             {" "}
             {/* space-x-4 */}
             <Link href="/" className="flex-shrink-0 flex items-center">
-              <span className="text-2xl font-bold text-[#002249]">
+              <span className="text-2xl font-bold text-[#002249] whitespace-nowrap">
                 Children Care Center
               </span>
             </Link>
           </div>
 
-          {/* Desktop navigation */}
-          <div className="hidden md:flex items-center">
-            {navItems.map((item, index) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                className={`px-[10px] py-[10px] rounded-md text-base font-[550] text-[#292E35] ${
-                  isActive(item.href)
-                    ? "text-blue-600 bg-blue-50"
-                    : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
-                }`}
-                style={index === navItems.length - 1 ? lastNavItemStyle : {}}
-              >
-                {item.title}
-              </Link>
-            ))}
+          <div className="hidden md:flex items-center gap-x-8">
+            <div className="flex items-center gap-x-6">
+              {navItems.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`px-2 py-2 rounded-md text-base font-[550] text-[#292E35] whitespace-nowrap ${
+                    isActive(item.href)
+                      ? "text-blue-600 bg-blue-50"
+                      : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
+                  }`}
+                >
+                  {item.title}
+                </Link>
+              ))}
+            </div>
+            {!isLoading && !isAuthenticated && (
+              <div className="flex items-center gap-x-2 ml-6">
+                <Link href="/login">
+                  <RoundedButton
+                    text="Đăng nhập ngay"
+                    onClick={() => {}}
+                    className="min-w-[120px] text-center px-6 py-2 text-base rounded-full bg-blue-600 hover:bg-blue-700 border-2 border-black shadow-lg font-bold transition-all duration-150"
+                  />
+                </Link>
+                <Link href="/register">
+                  <RoundedButton
+                    text="Đăng ký tư vấn"
+                    onClick={() => {}}
+                    className="min-w-[140px] text-center px-6 py-2 text-base rounded-full bg-green-500 hover:bg-green-600 border-2 border-black shadow-lg font-bold transition-all duration-150"
+                  />
+                </Link>
+              </div>
+            )}
+            {!isLoading && isAuthenticated && (
+              <div className="relative ml-6" ref={dropdownRef}>
+                <div
+                  className="flex items-center cursor-pointer px-4 py-2 rounded-full border border-gray-200 hover:bg-gray-100"
+                  onClick={() => setIsDropdownOpen((v) => !v)}
+                >
+                  <span className="font-semibold text-[#0070F4] mr-2">{user?.fullName || "Tài khoản"}</span>
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-50">
+                    <Link
+                      href="/myprofile"
+                      className="block px-4 py-2 text-gray-700 hover:bg-blue-50 rounded-t-lg"
+                      onClick={() => setIsDropdownOpen(false)}
+                    >
+                      Tài khoản của tôi
+                    </Link>
+                    <div
+                      className="block px-4 py-2 text-red-600 hover:bg-blue-50 rounded-b-lg cursor-pointer"
+                      onClick={() => {
+                        setIsDropdownOpen(false);
+                        logout();
+                      }}
+                    >
+                      Đăng xuất
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
-          {/* Mobile menu button */}
           <div className="flex md:hidden items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -71,7 +129,6 @@ const Navbar = () => {
               aria-expanded="false"
             >
               <span className="sr-only">Open main menu</span>
-              {/* Icon for menu */}
               <svg
                 className={`${isMenuOpen ? "hidden" : "block"} h-6 w-6`}
                 xmlns="http://www.w3.org/2000/svg"
@@ -87,7 +144,6 @@ const Navbar = () => {
                   d="M4 6h16M4 12h16M4 18h16"
                 />
               </svg>
-              {/* Icon for closing menu */}
               <svg
                 className={`${isMenuOpen ? "block" : "hidden"} h-6 w-6`}
                 xmlns="http://www.w3.org/2000/svg"
@@ -108,7 +164,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile menu, show/hide based on menu state */}
       <div className={`${isMenuOpen ? "block" : "hidden"} md:hidden`}>
         <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
           {navItems.map((item) => (
@@ -120,10 +175,41 @@ const Navbar = () => {
                   ? "text-blue-600 bg-blue-50"
                   : "text-gray-700 hover:text-blue-600 hover:bg-blue-50"
               }`}
+              onClick={() => setIsMenuOpen(false)}
             >
               {item.title}
             </Link>
           ))}
+          {!isLoading && !isAuthenticated && (
+            <>
+              <Link href="/login">
+                <RoundedButton text="Đăng nhập ngay" onClick={() => setIsMenuOpen(false)} className="mt-2" />
+              </Link>
+              <Link href="/register">
+                <RoundedButton text="Đăng ký tư vấn" onClick={() => setIsMenuOpen(false)} className="mt-2 bg-green-500 hover:bg-green-600" />
+              </Link>
+            </>
+          )}
+          {!isLoading && isAuthenticated && (
+            <div className="mt-2">
+              <Link
+                href="/myprofile"
+                className="block px-4 py-2 text-gray-700 hover:bg-blue-50 rounded-t-lg"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Tài khoản của tôi
+              </Link>
+              <div
+                className="block px-4 py-2 text-red-600 hover:bg-blue-50 rounded-b-lg cursor-pointer"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                  logout();
+                }}
+              >
+                Đăng xuất
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </nav>
