@@ -4,38 +4,40 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
+import axios from "axios";
 
 export default function LoginPage() {
   const router = useRouter();
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
+    email: "",
+    password: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log(formData);
     e.preventDefault();
-    setError('');
+    setError("");
     setIsLoading(true);
 
     try {
-      // TODO: Implement actual login logic here
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+      const response = await axios.post("http://localhost:3000/api/auth/login", {
+        email: formData.email,
+        password: formData.password,
       });
 
-      if (!response.ok) {
-        throw new Error('Đăng nhập thất bại');
+      localStorage.setItem("accessToken", response.data.accessToken);
+      localStorage.setItem("refreshToken", response.data.refreshToken);
+      localStorage.setItem("user", JSON.stringify(response.data.user));
+
+      if (response.status !== 200) {
+        throw new Error("Đăng nhập thất bại");
       }
 
-      router.push('/dashboard');
+      router.push("/");
     } catch {
-      setError('Email hoặc mật khẩu không đúng');
+      setError("Email hoặc mật khẩu không đúng");
     } finally {
       setIsLoading(false);
     }
@@ -43,9 +45,9 @@ export default function LoginPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -73,9 +75,7 @@ export default function LoginPage() {
           <div className="w-full md:w-1/2 space-y-6">
             <div className="text-center">
               <h1 className="text-3xl font-bold text-gray-800 mb-2">Đăng nhập</h1>
-              <p className="text-lg text-gray-600">
-                Hãy đăng nhập để bắt đầu hành trình vui vẻ
-              </p>
+              <p className="text-lg text-gray-600">Hãy đăng nhập để bắt đầu hành trình vui vẻ</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -96,7 +96,10 @@ export default function LoginPage() {
                 </div>
 
                 <div>
-                  <label htmlFor="password" className="block text-lg font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="password"
+                    className="block text-lg font-medium text-gray-700 mb-2"
+                  >
                     Mật khẩu
                   </label>
                   <input
@@ -122,20 +125,20 @@ export default function LoginPage() {
                 disabled={isLoading}
                 className="w-full py-4 px-6 text-lg font-medium text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl shadow-lg hover:from-purple-600 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transform transition-all duration-200 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isLoading ? 'Đang đăng nhập...' : 'Đăng nhập'}
+                {isLoading ? "Đang đăng nhập..." : "Đăng nhập"}
               </button>
 
               <div className="text-center space-y-4">
-                <Link 
-                  href="/forgot-password" 
+                <Link
+                  href="/forgot-password"
                   className="text-lg text-purple-600 hover:text-purple-700 transition-colors duration-200"
                 >
                   Quên mật khẩu?
                 </Link>
                 <p className="text-lg text-gray-600">
-                  Chưa có tài khoản?{' '}
-                  <Link 
-                    href="/register" 
+                  Chưa có tài khoản?{" "}
+                  <Link
+                    href="/register"
                     className="font-medium text-purple-600 hover:text-purple-700 transition-colors duration-200"
                   >
                     Đăng ký ngay

@@ -5,6 +5,7 @@ import Card from "./card";
 import RoundedButton from "@/components/common/RoundedButton";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { CldImage } from "next-cloudinary";
 
 const cards = [
   {
@@ -89,6 +90,7 @@ export default function Page() {
     "........... Tuần này bạn đã dành bao nhiêu thời gian để học cùng với bé nhà mình rồi?";
   return (
     <Layout>
+      {/* <CldImage width={600} height={600} src="batdaoroi_ffscim" alt="123" /> */}
       <div className="pt-10 flex flex-col items-center justify-center">
         <h1 className="text-[#002249] text-4xl font-bold mb-10">
           Hãy chia sẻ những kỉ niệm cùng bé nhà mình nhé

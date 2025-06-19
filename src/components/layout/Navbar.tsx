@@ -12,7 +12,7 @@ const Navbar = () => {
     { name: "Progress", title: "Theo dõi tiến độ", href: "/progress" },
     { name: "Guides", title: "Hướng dẫn", href: "/guides" },
     { name: "Centers", title: "Trung tâm cho bé", href: "/centers" },
-    { name: "Community", title: "Cộng đồng", href: "/community" },
+    // { name: "Community", title: "Cộng đồng", href: "/community" },
     { name: "Qa", title: "Trẻ hỏi chuyên gia trả lời", href: "/qa" },
     { name: "Solution", title: "Giải pháp", href: "/solution" },
     { name: "Advisory", title: "Đăng ký tư vấn", href: "/advisory" },
