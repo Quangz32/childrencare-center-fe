@@ -22,18 +22,42 @@ export default function Page() {
   const { apiCall, isAuthenticated, isLoading: authLoading } = useAuth();
   const [memories, setMemories] = useState<MemoryData[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedWeek, setSelectedWeek] = useState(weeks[0]);
-  const [showWeekSelector, setShowWeekSelector] = useState(false);
+  const [currentWeek, setCurrentWeek] = useState<{
+    startDate: string;
+    endDate: string;
+  }>({ startDate: "", endDate: "" });
   const [showModal, setShowModal] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>("");
 
   useEffect(() => {
-    if (!authLoading && isAuthenticated) {
+    // Tính toán tuần hiện tại (từ thứ 2 đến chủ nhật)
+    const today = new Date();
+    const currentDay = today.getDay(); // 0 = Chủ nhật, 1 = Thứ 2, ...
+
+    // Tính ngày thứ 2 (đầu tuần)
+    const monday = new Date(today);
+    // Nếu hôm nay là chủ nhật (0), lùi lại 6 ngày để lấy thứ 2 tuần trước
+    // Nếu không phải chủ nhật, lùi lại (currentDay - 1) ngày để lấy thứ 2
+    monday.setDate(today.getDate() - (currentDay === 0 ? 6 : currentDay - 1));
+
+    // Tính ngày chủ nhật (cuối tuần)
+    const sunday = new Date(monday);
+    sunday.setDate(monday.getDate() + 6);
+
+    // Format dates to YYYY-MM-DD
+    const startDate = monday.toISOString().split("T")[0];
+    const endDate = sunday.toISOString().split("T")[0];
+
+    setCurrentWeek({ startDate, endDate });
+  }, []);
+
+  useEffect(() => {
+    if (!authLoading && isAuthenticated && currentWeek.startDate) {
       fetchMemories();
     } else if (!authLoading && !isAuthenticated) {
       setLoading(false);
     }
-  }, [authLoading, isAuthenticated]);
+  }, [authLoading, isAuthenticated, currentWeek]);
 
   const fetchMemories = async () => {
     try {
@@ -70,9 +94,32 @@ export default function Page() {
   const lichyeuthuongMessage =
     "........... Tuần này bạn đã dành bao nhiêu thời gian để học cùng với bé nhà mình rồi?";
 
-  const handleWeekChange = (week: (typeof weeks)[0]) => {
-    setSelectedWeek(week);
-    setShowWeekSelector(false);
+  // Chuyển đến tuần trước
+  const goToPreviousWeek = () => {
+    const startDate = new Date(currentWeek.startDate);
+    startDate.setDate(startDate.getDate() - 7);
+
+    const endDate = new Date(currentWeek.endDate);
+    endDate.setDate(endDate.getDate() - 7);
+
+    setCurrentWeek({
+      startDate: startDate.toISOString().split("T")[0],
+      endDate: endDate.toISOString().split("T")[0],
+    });
+  };
+
+  // Chuyển đến tuần sau
+  const goToNextWeek = () => {
+    const startDate = new Date(currentWeek.startDate);
+    startDate.setDate(startDate.getDate() + 7);
+
+    const endDate = new Date(currentWeek.endDate);
+    endDate.setDate(endDate.getDate() + 7);
+
+    setCurrentWeek({
+      startDate: startDate.toISOString().split("T")[0],
+      endDate: endDate.toISOString().split("T")[0],
+    });
   };
 
   const handleAddMemory = (date: string) => {
@@ -91,8 +138,10 @@ export default function Page() {
   };
 
   // Tạo danh sách 7 ngày trong tuần hiện tại
-  const getWeekDays = (week: typeof selectedWeek) => {
-    const startDate = new Date(week.startDate);
+  const getWeekDays = () => {
+    if (!currentWeek.startDate) return [];
+
+    const startDate = new Date(currentWeek.startDate);
     const days = [];
 
     for (let i = 0; i < 7; i++) {
@@ -117,13 +166,14 @@ export default function Page() {
     return days;
   };
 
-  const weekDays = getWeekDays(selectedWeek);
+  const weekDays = getWeekDays();
 
   // Format date để hiển thị đẹp hơn (DD/MM/YYYY)
   const formatDisplayDate = (dateString: string) => {
     const date = new Date(dateString + "T00:00:00");
     return date.toLocaleDateString("vi-VN");
   };
+
   // Tạo danh sách cards để hiển thị (bao gồm cả thẻ trống)
   const displayCards = weekDays.map((day, index) => {
     const existingMemory = memories.find((memory) => memory.date === day.date);
@@ -156,9 +206,10 @@ export default function Page() {
   });
 
   // Format date range cho header tuần
-  const formatWeekRange = (week: typeof selectedWeek) => {
-    const startDate = formatDisplayDate(week.startDate);
-    const endDate = formatDisplayDate(week.endDate);
+  const formatWeekRange = () => {
+    if (!currentWeek.startDate) return "";
+    const startDate = formatDisplayDate(currentWeek.startDate);
+    const endDate = formatDisplayDate(currentWeek.endDate);
     return `${startDate} - ${endDate}`;
   };
 
@@ -203,37 +254,27 @@ export default function Page() {
           Hãy chia sẻ những kỷ niệm cùng bé nhà mình nhé
         </h1>
 
-        {/* Nút chọn tuần */}
-        <div className="mb-6 relative">
+        {/* Hiển thị tuần hiện tại và nút điều hướng */}
+        <div className="mb-6 flex items-center justify-center">
           <button
-            onClick={() => setShowWeekSelector(!showWeekSelector)}
-            className="bg-[#FCE646] border-[4px] border-[#002249] px-6 py-3 rounded-xl shadow-[2px_4px_0px_0px_#000000] hover:shadow-[1px_2px_0px_0px_#000000] transition-all duration-200"
+            onClick={goToPreviousWeek}
+            className="bg-[#FCE646] border-[4px] border-[#002249] px-4 py-2 rounded-xl shadow-[2px_4px_0px_0px_#000000] hover:shadow-[1px_2px_0px_0px_#000000] transition-all duration-200 mr-4"
           >
-            <span className="text-[#002249] text-xl font-bold">
-              {selectedWeek.name} ({formatWeekRange(selectedWeek)})
-            </span>
-            <span className="ml-2 text-[#002249]">▼</span>
+            <span className="text-[#002249] text-xl font-bold">←</span>
           </button>
 
-          {/* Dropdown tuần */}
-          {showWeekSelector && (
-            <div className="absolute top-full left-0 mt-2 bg-white border-[4px] border-[#002249] rounded-xl shadow-[2px_4px_0px_0px_#000000] z-10 min-w-[300px]">
-              {weeks.map((week) => (
-                <button
-                  key={week.id}
-                  onClick={() => handleWeekChange(week)}
-                  className={`w-full px-4 py-3 text-left hover:bg-[#FCE646] transition-colors duration-200 ${
-                    selectedWeek.id === week.id ? "bg-[#FCE646]" : ""
-                  }`}
-                >
-                  <div className="text-[#002249] font-bold">{week.name}</div>
-                  <div className="text-[#002249] text-sm">
-                    {formatWeekRange(week)}
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
+          <div className="bg-[#FCE646] border-[4px] border-[#002249] px-6 py-3 rounded-xl shadow-[2px_4px_0px_0px_#000000]">
+            <span className="text-[#002249] text-xl font-bold">
+              {formatWeekRange()}
+            </span>
+          </div>
+
+          <button
+            onClick={goToNextWeek}
+            className="bg-[#FCE646] border-[4px] border-[#002249] px-4 py-2 rounded-xl shadow-[2px_4px_0px_0px_#000000] hover:shadow-[1px_2px_0px_0px_#000000] transition-all duration-200 ml-4"
+          >
+            <span className="text-[#002249] text-xl font-bold">→</span>
+          </button>
         </div>
 
         {/* Lịch yêu thương */}
