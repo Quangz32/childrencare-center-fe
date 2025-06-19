@@ -8,94 +8,64 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { CldImage } from "next-cloudinary";
 import Modal, { MemoryData } from "./Modal";
-
-const initialCards: MemoryData[] = [
-  {
-    id: 1,
-    weekday: "Thứ 2",
-    image: "/images/progress/lichyeuthuong.jpg",
-    date: "20/05/2025",
-    title: "Lưu lại kỉ niệm nhé",
-    content: ".............................................",
-  },
-  {
-    id: 2,
-    weekday: "Thứ 3",
-    image: "/images/progress/lichyeuthuong.jpg",
-    date: "21/05/2025",
-    title: "Lưu lại kỉ niệm nhé",
-    content: ".............................................",
-  },
-  {
-    id: 4,
-    weekday: "Thứ 5",
-    image: "/images/progress/lichyeuthuong.jpg",
-    date: "23/05/2025",
-    title: "Lưu lại kỉ niệm nhé",
-    content: ".............................................",
-  },
-  {
-    id: 5,
-    weekday: "Thứ 6",
-    image: "/images/progress/lichyeuthuong.jpg",
-    date: "24/05/2025",
-    title: "Lưu lại kỉ niệm nhé",
-    content: ".............................................",
-  },
-  {
-    id: 6,
-    weekday: "Thứ 7",
-    image: "/images/progress/lichyeuthuong.jpg",
-    date: "25/05/2025",
-    title: "Lưu lại kỉ niệm nhé",
-    content: ".............................................",
-  },
-  {
-    id: 7,
-    weekday: "Chủ nhật",
-    image: "/images/progress/lichyeuthuong.jpg",
-    date: "26/05/2025",
-    title: "Lưu lại kỉ niệm nhé",
-    content: ".............................................",
-  },
-];
+import { useAuth } from "@/hooks/useAuth";
 
 // Tạo danh sách các tuần
 const weeks = [
-  { id: 1, name: "Tuần 1", startDate: "20/05/2025", endDate: "26/05/2025" },
-  { id: 2, name: "Tuần 2", startDate: "27/05/2025", endDate: "02/06/2025" },
-  { id: 3, name: "Tuần 3", startDate: "03/06/2025", endDate: "09/06/2025" },
-  { id: 4, name: "Tuần 4", startDate: "10/06/2025", endDate: "16/06/2025" },
+  { id: 1, name: "Tuần 1", startDate: "2025-05-20", endDate: "2025-05-26" },
+  { id: 2, name: "Tuần 2", startDate: "2025-05-27", endDate: "2025-06-02" },
+  { id: 3, name: "Tuần 3", startDate: "2025-06-03", endDate: "2025-06-09" },
+  { id: 4, name: "Tuần 4", startDate: "2025-06-10", endDate: "2025-06-16" },
 ];
 
 export default function Page() {
-  //Test fetch
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    fetchData();
-    // setIsClient(true);
-    // Call API ở đây
-    // fetchData().then(setData);
-  }, []);
-
-  const fetchData = async () => {
-    const token =
-      "eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjY4NTBlY2NhMGY2MTlhZTY1ZWFmYTQ5NSIsInJvbGUiOiJwYXJlbnQiLCJleHAiOjE3NTAzMDg3ODR9.3UszYqvNclXC1iVtYW5BDERhqk-CD6bVu7qgX9ZHcgI";
-    const response = await axios.get("http://localhost:3000/api/memories", {
-      headers: { Authorization: "Bearer " + token },
-    });
-    setData(response.data.allMemories);
-    console.log("--progress ", response.data.allMemories);
-  };
-
-  //Vinh's code
+  const { apiCall, isAuthenticated, isLoading: authLoading } = useAuth();
+  const [memories, setMemories] = useState<MemoryData[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedWeek, setSelectedWeek] = useState(weeks[0]);
   const [showWeekSelector, setShowWeekSelector] = useState(false);
-  const [cards, setCards] = useState(initialCards);
   const [showModal, setShowModal] = useState(false);
-  const [modalMode, setModalMode] = useState<"add" | "edit">("add");
-  const [editingMemory, setEditingMemory] = useState<MemoryData | undefined>();
+  const [selectedDate, setSelectedDate] = useState<string>("");
+
+  useEffect(() => {
+    if (!authLoading && isAuthenticated) {
+      fetchMemories();
+    } else if (!authLoading && !isAuthenticated) {
+      setLoading(false);
+    }
+  }, [authLoading, isAuthenticated]);
+
+  const fetchMemories = async () => {
+    try {
+      setLoading(true);
+
+      const response = await apiCall("/api/memories");
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Failed to fetch memories");
+      }
+
+      // Transform API data to match MemoryData interface
+      const transformedMemories: MemoryData[] = data.allMemories.map(
+        (memory: any) => ({
+          id: memory._id,
+          date: memory.date.split("T")[0], // Convert to YYYY-MM-DD format
+          title: memory.title,
+          content: memory.content,
+          image: memory.image,
+        })
+      );
+
+      setMemories(transformedMemories);
+      console.log("Fetched memories:", transformedMemories);
+    } catch (error) {
+      console.error("Error fetching memories:", error);
+      alert("Có lỗi xảy ra khi tải danh sách kỷ niệm");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const lichyeuthuongMessage =
     "........... Tuần này bạn đã dành bao nhiêu thời gian để học cùng với bé nhà mình rồi?";
@@ -105,68 +75,71 @@ export default function Page() {
     setShowWeekSelector(false);
   };
 
-  const handleAddMemory = () => {
-    setModalMode("add");
-    setEditingMemory(undefined);
+  const handleAddMemory = (date: string) => {
+    setSelectedDate(date);
     setShowModal(true);
   };
 
-  const handleEditMemory = (id: number) => {
-    const memory = cards.find((card) => card.id === id);
-    if (memory) {
-      setModalMode("edit");
-      setEditingMemory(memory);
-      setShowModal(true);
-    }
-  };
-
-  const handleDeleteMemory = (id: number) => {
-    if (confirm("Bạn có chắc chắn muốn xóa kỉ niệm này?")) {
-      setCards((prev) => prev.filter((card) => card.id !== id));
-    }
-  };
-
   const handleSaveMemory = (data: MemoryData) => {
-    if (modalMode === "add") {
-      const newId = Math.max(...cards.map((card) => card.id || 0), 0) + 1;
-      const newMemory = { ...data, id: newId };
-      setCards((prev) => [...prev, newMemory]);
-    } else if (modalMode === "edit" && editingMemory?.id) {
-      setCards((prev) =>
-        prev.map((card) =>
-          card.id === editingMemory.id ? { ...data, id: editingMemory.id } : card
-        )
-      );
-    }
+    // Thêm memory mới vào danh sách local
+    setMemories((prev) => [...prev, data]);
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
-    setEditingMemory(undefined);
+    setSelectedDate("");
   };
 
-  // Tạo danh sách 7 ngày trong tuần
-  const weekDays = [
-    { weekday: "Thứ 2", date: "20/05/2025" },
-    { weekday: "Thứ 3", date: "21/05/2025" },
-    { weekday: "Thứ 4", date: "22/05/2025" },
-    { weekday: "Thứ 5", date: "23/05/2025" },
-    { weekday: "Thứ 6", date: "24/05/2025" },
-    { weekday: "Thứ 7", date: "25/05/2025" },
-    { weekday: "Chủ nhật", date: "26/05/2025" },
-  ];
+  // Tạo danh sách 7 ngày trong tuần hiện tại
+  const getWeekDays = (week: typeof selectedWeek) => {
+    const startDate = new Date(week.startDate);
+    const days = [];
 
+    for (let i = 0; i < 7; i++) {
+      const currentDate = new Date(startDate);
+      currentDate.setDate(startDate.getDate() + i);
+
+      const weekdayNames = [
+        "Chủ nhật",
+        "Thứ 2",
+        "Thứ 3",
+        "Thứ 4",
+        "Thứ 5",
+        "Thứ 6",
+        "Thứ 7",
+      ];
+      const weekday = weekdayNames[currentDate.getDay()];
+      const dateString = currentDate.toISOString().split("T")[0]; // YYYY-MM-DD
+
+      days.push({ weekday, date: dateString });
+    }
+
+    return days;
+  };
+
+  const weekDays = getWeekDays(selectedWeek);
+
+  // Format date để hiển thị đẹp hơn (DD/MM/YYYY)
+  const formatDisplayDate = (dateString: string) => {
+    const date = new Date(dateString + "T00:00:00");
+    return date.toLocaleDateString("vi-VN");
+  };
   // Tạo danh sách cards để hiển thị (bao gồm cả thẻ trống)
   const displayCards = weekDays.map((day, index) => {
-    const existingCard = cards.find((card) => card.weekday === day.weekday);
+    const existingMemory = memories.find((memory) => memory.date === day.date);
 
-    if (existingCard) {
+    if (existingMemory) {
       return (
         <Card
-          key={existingCard.id}
-          {...existingCard}
-          onEdit={handleEditMemory}
-          onDelete={handleDeleteMemory}
+          key={existingMemory.id}
+          id={existingMemory.id}
+          weekday={day.weekday}
+          date={formatDisplayDate(day.date)}
+          title={existingMemory.title}
+          content={existingMemory.content}
+          image={existingMemory.image}
+          onEdit={() => {}} // Có thể implement sau
+          onDelete={() => {}} // Có thể implement sau
         />
       );
     } else {
@@ -174,20 +147,60 @@ export default function Page() {
         <Card
           key={`empty-${index}`}
           weekday={day.weekday}
-          date={day.date}
+          date={formatDisplayDate(day.date)}
           isEmpty={true}
-          onAdd={handleAddMemory}
+          onAdd={() => handleAddMemory(day.date)}
         />
       );
     }
   });
 
+  // Format date range cho header tuần
+  const formatWeekRange = (week: typeof selectedWeek) => {
+    const startDate = formatDisplayDate(week.startDate);
+    const endDate = formatDisplayDate(week.endDate);
+    return `${startDate} - ${endDate}`;
+  };
+
+  if (authLoading || loading) {
+    return (
+      <Layout>
+        <div className="pt-10 flex flex-col items-center justify-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#002249]"></div>
+          <p className="mt-4 text-[#002249]">Đang tải...</p>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <Layout>
+        <div className="pt-10 flex flex-col items-center justify-center">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-[#002249] mb-4">
+              Vui lòng đăng nhập để xem kỷ niệm
+            </h2>
+            <p className="text-gray-600 mb-6">
+              Bạn cần đăng nhập để truy cập trang này.
+            </p>
+            <button
+              onClick={() => (window.location.href = "/login")}
+              className="bg-[#0070F4] text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-600 transition-colors"
+            >
+              Đăng nhập
+            </button>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <Layout>
-      {/* <CldImage width={600} height={600} src="batdaoroi_ffscim" alt="123" /> */}
       <div className="pt-10 flex flex-col items-center justify-center">
         <h1 className="text-[#002249] text-4xl font-bold mb-10">
-          Hãy chia sẻ những kỉ niệm cùng bé nhà mình nhé
+          Hãy chia sẻ những kỷ niệm cùng bé nhà mình nhé
         </h1>
 
         {/* Nút chọn tuần */}
@@ -197,7 +210,7 @@ export default function Page() {
             className="bg-[#FCE646] border-[4px] border-[#002249] px-6 py-3 rounded-xl shadow-[2px_4px_0px_0px_#000000] hover:shadow-[1px_2px_0px_0px_#000000] transition-all duration-200"
           >
             <span className="text-[#002249] text-xl font-bold">
-              {selectedWeek.name} ({selectedWeek.startDate} - {selectedWeek.endDate})
+              {selectedWeek.name} ({formatWeekRange(selectedWeek)})
             </span>
             <span className="ml-2 text-[#002249]">▼</span>
           </button>
@@ -215,7 +228,7 @@ export default function Page() {
                 >
                   <div className="text-[#002249] font-bold">{week.name}</div>
                   <div className="text-[#002249] text-sm">
-                    {week.startDate} - {week.endDate}
+                    {formatWeekRange(week)}
                   </div>
                 </button>
               ))}
@@ -256,7 +269,9 @@ export default function Page() {
               {/* 1st card */}
               {displayCards[0]}
               <div className="col-span-1 sm:col-span-1 md:col-span-2 h-[100px] p-4 ">
-                <p className=" text-[#002249] text-xl">{lichyeuthuongMessage}</p>
+                <p className=" text-[#002249] text-xl">
+                  {lichyeuthuongMessage}
+                </p>
               </div>
               {/* 2nd -> 7th card */}
               {displayCards.slice(1).map((card, index) => (
@@ -265,16 +280,16 @@ export default function Page() {
             </div>
           </div>
         </div>
-        {/* <RoundedButton text="Thêm kỉ niệm" onClick={() => {}} className="mt-8 mb-8 text-2xl" /> */}
       </div>
       <br />
+
       {/* Modal */}
       <Modal
         isOpen={showModal}
         onClose={handleCloseModal}
         onSave={handleSaveMemory}
-        memory={editingMemory}
-        mode={modalMode}
+        selectedDate={selectedDate}
+        mode="add"
       />
     </Layout>
   );

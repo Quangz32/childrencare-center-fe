@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 
 interface CardProps {
-  id?: number;
+  id?: string;
   weekday: string;
   image?: string;
   date: string;
@@ -11,8 +11,8 @@ interface CardProps {
   content?: string;
   isEmpty?: boolean;
   onAdd?: () => void;
-  onEdit?: (id: number) => void;
-  onDelete?: (id: number) => void;
+  onEdit?: (id: string) => void;
+  onDelete?: (id: string) => void;
 }
 
 export default function Card({
@@ -37,9 +37,9 @@ export default function Card({
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
@@ -101,13 +101,18 @@ export default function Card({
                   onClick={() => setShowMenu(!showMenu)}
                   className="w-8 h-8 flex items-center justify-center text-black hover:bg-gray-200 rounded-full transition-colors duration-200"
                 >
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                  >
                     <circle cx="12" cy="12" r="1.5" />
                     <circle cx="6" cy="12" r="1.5" />
                     <circle cx="18" cy="12" r="1.5" />
                   </svg>
                 </button>
-                
+
                 {/* Dropdown menu */}
                 {showMenu && (
                   <div className="absolute right-0 top-full mt-1 bg-white border-2 border-[#002249] rounded-lg shadow-[2px_4px_0px_0px_#000000] z-10 min-w-[120px]">
@@ -115,8 +120,13 @@ export default function Card({
                       onClick={handleEdit}
                       className="w-full px-3 py-2 text-left hover:bg-[#FCE646] transition-colors duration-200 flex items-center space-x-2"
                     >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
+                        <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
                       </svg>
                       <span className="text-[#002249] font-semibold">Sửa</span>
                     </button>
@@ -124,8 +134,13 @@ export default function Card({
                       onClick={handleDelete}
                       className="w-full px-3 py-2 text-left hover:bg-red-100 transition-colors duration-200 flex items-center space-x-2"
                     >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                      >
+                        <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
                       </svg>
                       <span className="text-red-600 font-semibold">Xóa</span>
                     </button>

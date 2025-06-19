@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 
 interface User {
-  _id: string;
+  id: string;
   email: string;
   fullName: string;
   role: string;
@@ -26,41 +26,28 @@ export const useAuth = () => {
     isAuthenticated: false,
   });
 
-  // Load auth data from localStorage on mount
   useEffect(() => {
-    const loadAuthData = () => {
-      try {
-        const accessToken = localStorage.getItem('accessToken');
-        const userStr = localStorage.getItem('user');
-        
-        if (accessToken && userStr) {
-          const user = JSON.parse(userStr);
-          setAuthState({
-            user,
-            accessToken,
-            isLoading: false,
-            isAuthenticated: true,
-          });
-        } else {
-          setAuthState({
-            user: null,
-            accessToken: null,
-            isLoading: false,
-            isAuthenticated: false,
-          });
-        }
-      } catch (error) {
-        console.error('Error loading auth data:', error);
-        setAuthState({
-          user: null,
-          accessToken: null,
-          isLoading: false,
-          isAuthenticated: false,
-        });
-      }
-    };
-
-    loadAuthData();
+    // Check for stored token on component mount
+    const storedToken = localStorage.getItem('accessToken');
+    const storedUser = localStorage.getItem('user');
+    
+    if (storedToken && storedUser) {
+      setAuthState(prev => ({
+        ...prev,
+        accessToken: storedToken,
+        user: JSON.parse(storedUser),
+        isLoading: false,
+        isAuthenticated: true,
+      }));
+    } else {
+      setAuthState(prev => ({
+        ...prev,
+        accessToken: null,
+        user: null,
+        isLoading: false,
+        isAuthenticated: false,
+      }));
+    }
   }, []);
 
   // Login function
