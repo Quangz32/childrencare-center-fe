@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import Image from 'next/image';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
 import axios from "axios";
 
 export default function LoginPage() {
@@ -22,7 +22,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:3000/api/auth/login", {
+      const response = await axios.post("api/auth/login", {
         email: formData.email,
         password: formData.password,
       });
@@ -74,14 +74,21 @@ export default function LoginPage() {
           {/* Phần form đăng nhập */}
           <div className="w-full md:w-1/2 space-y-6">
             <div className="text-center">
-              <h1 className="text-3xl font-bold text-gray-800 mb-2">Đăng nhập</h1>
-              <p className="text-lg text-gray-600">Hãy đăng nhập để bắt đầu hành trình vui vẻ</p>
+              <h1 className="text-3xl font-bold text-gray-800 mb-2">
+                Đăng nhập
+              </h1>
+              <p className="text-lg text-gray-600">
+                Hãy đăng nhập để bắt đầu hành trình vui vẻ
+              </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-4">
                 <div>
-                  <label htmlFor="email" className="block text-lg font-medium text-gray-700 mb-2">
+                  <label
+                    htmlFor="email"
+                    className="block text-lg font-medium text-gray-700 mb-2"
+                  >
                     Email
                   </label>
                   <input
