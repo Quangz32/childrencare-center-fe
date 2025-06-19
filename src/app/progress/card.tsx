@@ -65,13 +65,13 @@ export default function Card({
 
   if (isEmpty) {
     return (
-      <div className="p-4 bg-[#FFFCE6] border-[1px] border-black rounded-lg shadow-[1px_2px_0px_0px_#000000] relative min-h-[200px] flex items-center justify-center">
+      <div className="max-h-[180px] p-4 bg-[#FFFCE6] border-[1px] border-black rounded-lg shadow-[1px_2px_0px_0px_#000000] relative min-h-[180px] flex items-center justify-center">
         <div className="flex flex-col items-center">
           <p className="text-[#7B61FF] text-xl font-bold mb-2">{weekday}</p>
           <p className="text-black text-sm font-semibold mb-4">{date}</p>
           <button
             onClick={handleAdd}
-            className="w-16 h-16 bg-[#7B61FF] rounded-full flex items-center justify-center shadow-[2px_4px_0px_0px_#000000] hover:shadow-[1px_2px_0px_0px_#000000] transition-all duration-200"
+            className="w-12 h-12 bg-[#7B61FF] rounded-full flex items-center justify-center shadow-[2px_4px_0px_0px_#000000] hover:shadow-[1px_2px_0px_0px_#000000] transition-all duration-200"
           >
             <span className="text-white text-3xl font-bold">+</span>
           </button>
@@ -88,7 +88,7 @@ export default function Card({
 
   return (
     <div>
-      <div className="p-4 bg-[#FFFCE6] border-[1px] border-black rounded-lg shadow-[1px_2px_0px_0px_#000000] relative">
+      <div className="p-4 h-[180px] bg-[#FFFCE6] border-[1px] border-black rounded-lg shadow-[1px_2px_0px_0px_#000000] relative">
         <div className="flex flex-col">
           {/* up */}
           <div className="mb-2 flex flex-row justify-between items-center">
@@ -154,7 +154,7 @@ export default function Card({
             <img
               src={image}
               alt="image"
-              className="w-2/5 border-[#FFDD00] border-2 rounded-lg shadow-[0.83px_1.66px_0px_0px_#000000]"
+              className="w-2/5 h-[108px] border-[#FFDD00] border-2 rounded-lg shadow-[0.83px_1.66px_0px_0px_#000000]"
             />
             <div className="flex flex-col pl-3 w-3/5">
               <p className="text-black text-sm font-bold">{title}</p>
