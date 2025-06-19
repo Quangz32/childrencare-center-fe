@@ -1,6 +1,10 @@
 import Layout from '@/components/layout/Layout';
 
+
 export default function Home() {
+  // const secret = process.env.SECRET;
+  // console.log('Secret Key:', secret);
+
   return (
     <Layout>
       <div className="container mx-auto px-4 py-12">
@@ -11,7 +15,8 @@ export default function Home() {
         <div className="bg-blue-50 p-6 rounded-lg shadow-sm">
           <h2 className="text-2xl font-semibold text-blue-800 mb-4">Our Mission</h2>
           <p className="text-gray-700">
-            To create a nurturing environment where children can thrive physically, emotionally, and intellectually.
+            To create a nurturing environment where children can thrive physically, emotionally, and
+            intellectually.
           </p>
         </div>
       </div>

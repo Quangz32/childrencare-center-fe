@@ -1,179 +1,365 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+import { useAuth } from "@/hooks/useAuth";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSave: (data: MemoryData) => void;
-  memory?: MemoryData;
+  selectedDate?: string; // Ngày được chọn từ parent component
   mode: "add" | "edit";
 }
 
 export interface MemoryData {
-  id?: number;
-  weekday: string;
+  id?: string;
   date: string;
   title: string;
   content: string;
   image?: string;
 }
 
-export default function Modal({ isOpen, onClose, onSave, memory, mode }: ModalProps) {
+export default function Modal({
+  isOpen,
+  onClose,
+  onSave,
+  selectedDate,
+  mode,
+}: ModalProps) {
+  const { apiCall } = useAuth();
   const [formData, setFormData] = useState<MemoryData>({
-    weekday: "",
     date: "",
     title: "",
     content: "",
-    image: "/images/progress/lichyeuthuong.jpg",
+    image: "",
   });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (memory && mode === "edit") {
-      setFormData(memory);
-    } else if (mode === "add") {
+    if (isOpen) {
+      // Set ngày được chọn từ parent hoặc ngày hiện tại
+      const dateToUse = selectedDate || new Date().toISOString().split("T")[0];
+
       setFormData({
-        weekday: "",
-        date: "",
+        date: dateToUse,
         title: "",
         content: "",
-        image: "/images/progress/lichyeuthuong.jpg",
+        image: "",
       });
+      setSelectedFile(null);
+      setErrors({});
     }
-  }, [memory, mode, isOpen]);
+  }, [isOpen, selectedDate]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    onSave(formData);
-    onClose();
+  const validateForm = (): boolean => {
+    const newErrors: { [key: string]: string } = {};
+
+    if (!formData.title.trim()) newErrors.title = "Vui lòng nhập tiêu đề";
+    if (!formData.content.trim()) newErrors.content = "Vui lòng nhập nội dung";
+    if (!selectedFile) newErrors.image = "Vui lòng chọn ảnh";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setFormData(prev => ({
-          ...prev,
-          image: e.target?.result as string
-        }));
-      };
-      reader.readAsDataURL(file);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!validateForm()) return;
+
+    setIsSubmitting(true);
+
+    try {
+      // Tạo FormData để gửi kèm file
+      const formDataToSend = new FormData();
+      formDataToSend.append("title", formData.title.trim());
+      formDataToSend.append("content", formData.content.trim());
+      formDataToSend.append("date", formData.date);
+
+      if (selectedFile) {
+        formDataToSend.append("image", selectedFile);
+      }
+
+      // Gửi request tới API sử dụng apiCall từ useAuth
+      const response = await fetch("/api/memories", {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: formDataToSend,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Có lỗi xảy ra khi tạo kỷ niệm");
+      }
+
+      const result = await response.json();
+
+      // Gọi callback onSave với data mới
+      onSave({
+        ...formData,
+        id: result.memory._id,
+        image: result.memory.image,
+      });
+
+      // Đóng modal
+      onClose();
+
+      // Hiển thị thông báo thành công
+      alert("Tạo kỷ niệm thành công!");
+    } catch (error: any) {
+      console.error("Error creating memory:", error);
+      alert(error.message || "Có lỗi xảy ra khi tạo kỷ niệm");
+    } finally {
+      setIsSubmitting(false);
     }
+  };
+
+  // Helper function để lấy auth headers
+  const getAuthHeaders = () => {
+    const token = localStorage.getItem("accessToken");
+    const headers: Record<string, string> = {};
+    if (token) {
+      headers.Authorization = `Bearer ${token}`;
+    }
+    return headers;
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      alert("Vui lòng chọn file hình ảnh");
+      return;
+    }
+
+    // Validate file size (max 10MB theo API)
+    if (file.size > 10 * 1024 * 1024) {
+      alert("File quá lớn. Vui lòng chọn file nhỏ hơn 10MB");
+      return;
+    }
+
+    setSelectedFile(file);
+
+    // Tạo preview URL
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setFormData((prev) => ({
+        ...prev,
+        image: e.target?.result as string,
+      }));
+    };
+    reader.readAsDataURL(file);
+
+    // Clear error nếu có
+    if (errors.image) {
+      setErrors((prev) => ({ ...prev, image: "" }));
+    }
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
+  };
+
+  // Format date để hiển thị đẹp hơn
+  const formatDisplayDate = (dateString: string) => {
+    if (!dateString) return "";
+    const date = new Date(dateString + "T00:00:00");
+    return date.toLocaleDateString("vi-VN", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   };
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg shadow-[4px_8px_0px_0px_#000000] border-4 border-[#002249] w-full max-w-2xl mx-auto p-0">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl mx-auto max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="bg-[#FCE646] p-2 sm:p-3 rounded-t-lg border-b-4 border-[#002249]">
-          <h2 className="text-[#002249] text-lg sm:text-xl font-bold text-center">
-            {mode === "add" ? "Thêm kỉ niệm mới" : "Sửa kỉ niệm"}
-          </h2>
+        <div className="bg-gradient-to-r from-[#FCE646] to-[#FFD700] p-6 rounded-t-2xl border-b-4 border-[#002249]">
+          <div className="flex justify-between items-center">
+            <h2 className="text-[#002249] text-2xl font-bold">
+              Thêm kỷ niệm mới
+            </h2>
+            <button
+              onClick={onClose}
+              className="w-8 h-8 bg-[#002249] text-white rounded-full flex items-center justify-center hover:bg-gray-800 transition-colors"
+            >
+              ×
+            </button>
+          </div>
         </div>
 
         {/* Content */}
-        <form onSubmit={handleSubmit} className="p-3 sm:p-4">
-          <div className="flex flex-col gap-3 sm:gap-4">
-            {/* Hàng 1: Thứ trong tuần & Ngày */}
-            <div className="flex flex-row gap-2">
-              <div className="flex-1">
-                <label className="block text-[#002249] font-semibold mb-1">Thứ trong tuần</label>
-                <select
-                  value={formData.weekday}
-                  onChange={(e) => setFormData(prev => ({ ...prev, weekday: e.target.value }))}
-                  className="w-full p-2 border-2 border-[#002249] rounded-lg focus:outline-none focus:border-[#7B61FF] text-sm text-black"
-                  required
-                >
-                  <option value="">Chọn thứ</option>
-                  <option value="Thứ 2">Thứ 2</option>
-                  <option value="Thứ 3">Thứ 3</option>
-                  <option value="Thứ 4">Thứ 4</option>
-                  <option value="Thứ 5">Thứ 5</option>
-                  <option value="Thứ 6">Thứ 6</option>
-                  <option value="Thứ 7">Thứ 7</option>
-                  <option value="Chủ nhật">Chủ nhật</option>
-                </select>
-              </div>
-              <div className="flex-1">
-                <label className="block text-[#002249] font-semibold mb-1">Ngày</label>
-                <input
-                  type="date"
-                  value={formData.date}
-                  onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
-                  className="w-full p-2 border-2 border-[#002249] rounded-lg focus:outline-none focus:border-[#7B61FF] text-sm text-black"
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Hàng 2: Tiêu đề & Hình ảnh */}
-            <div className="flex flex-row gap-2">
-              <div className="flex-1">
-                <label className="block text-[#002249] font-semibold mb-1">Tiêu đề</label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-                  placeholder="Nhập tiêu đề kỉ niệm"
-                  className="w-full p-2 border-2 border-[#002249] rounded-lg focus:outline-none focus:border-[#7B61FF] text-sm text-black"
-                  required
-                />
-              </div>
-              <div className="flex-1 flex flex-col justify-end">
-                <label className="block text-[#002249] font-semibold mb-1">Hình ảnh</label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="w-full p-2 border-2 border-[#002249] rounded-lg focus:outline-none focus:border-[#7B61FF] text-sm text-black"
-                />
-                {formData.image && (
-                  <div className="mt-1">
-                    <img
-                      src={formData.image}
-                      alt="Preview"
-                      className="w-14 h-14 object-cover rounded-lg border-2 border-[#FFDD00]"
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Hàng 3: Nội dung */}
+        <form onSubmit={handleSubmit} className="p-6">
+          <div className="space-y-6">
+            {/* Date Display (Disabled) */}
             <div>
-              <label className="block text-[#002249] font-semibold mb-1">Nội dung</label>
-              <textarea
-                value={formData.content}
-                onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-                placeholder="Mô tả kỉ niệm của bạn"
-                rows={3}
-                className="w-full p-2 border-2 border-[#002249] rounded-lg focus:outline-none focus:border-[#7B61FF] text-sm text-black resize-none"
-                required
+              <label className="block text-[#002249] font-semibold mb-2">
+                Ngày
+              </label>
+              <div className="w-full p-3 border-2 border-gray-200 rounded-xl bg-gray-50 text-gray-700">
+                {formatDisplayDate(formData.date)}
+              </div>
+              <p className="text-sm text-gray-500 mt-1">
+                Ngày đã được chọn và không thể thay đổi
+              </p>
+            </div>
+
+            {/* Title */}
+            <div>
+              <label className="block text-[#002249] font-semibold mb-2">
+                Tiêu đề *
+              </label>
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                placeholder="Nhập tiêu đề kỷ niệm"
+                className={`w-full p-3 border-2 rounded-xl text-gray-700 focus:outline-none focus:ring-2 transition-all ${
+                  errors.title
+                    ? "border-red-500 focus:border-red-500 focus:ring-red-200"
+                    : "border-gray-200 focus:border-blue-500 focus:ring-blue-200"
+                }`}
               />
+              {errors.title && (
+                <p className="text-red-500 text-sm mt-1">{errors.title}</p>
+              )}
+            </div>
+
+            {/* Image Upload */}
+            <div>
+              <label className="block text-[#002249] font-semibold mb-2">
+                Hình ảnh *
+              </label>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Current Image Preview */}
+                <div className="relative">
+                  {formData.image ? (
+                    <div className="relative w-full h-48 rounded-xl overflow-hidden border-2 border-gray-200">
+                      <Image
+                        src={formData.image}
+                        alt="Preview"
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-full h-48 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center bg-gray-50">
+                      <div className="text-center text-gray-500">
+                        <div className="text-4xl mb-2">🖼️</div>
+                        <p>Chưa chọn ảnh</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Upload Controls */}
+                <div className="flex flex-col justify-center space-y-4">
+                  <button
+                    type="button"
+                    onClick={() => fileInputRef.current?.click()}
+                    disabled={isSubmitting}
+                    className="bg-[#0070F4] text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Chọn ảnh
+                  </button>
+
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+
+                  <p className="text-sm text-gray-600">
+                    Hỗ trợ: JPG, PNG, GIF (tối đa 10MB)
+                  </p>
+
+                  {selectedFile && (
+                    <p className="text-sm text-green-600">
+                      ✓ Đã chọn: {selectedFile.name}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              {errors.image && (
+                <p className="text-red-500 text-sm mt-2">{errors.image}</p>
+              )}
+            </div>
+
+            {/* Content */}
+            <div>
+              <label className="block text-[#002249] font-semibold mb-2">
+                Nội dung *
+              </label>
+              <textarea
+                name="content"
+                value={formData.content}
+                onChange={handleInputChange}
+                placeholder="Mô tả kỷ niệm của bạn..."
+                rows={4}
+                className={`w-full p-3 border-2 rounded-xl text-gray-700 focus:outline-none focus:ring-2 transition-all resize-none ${
+                  errors.content
+                    ? "border-red-500 focus:border-red-500 focus:ring-red-200"
+                    : "border-gray-200 focus:border-blue-500 focus:ring-blue-200"
+                }`}
+              />
+              {errors.content && (
+                <p className="text-red-500 text-sm mt-1">{errors.content}</p>
+              )}
             </div>
           </div>
 
           {/* Buttons */}
-          <div className="flex space-x-4 mt-6">
+          <div className="flex flex-col sm:flex-row gap-4 mt-8">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-3 px-4 bg-gray-300 text-[#002249] font-semibold rounded-lg border-2 border-[#002249] shadow-[2px_4px_0px_0px_#000000] hover:shadow-[1px_2px_0px_0px_#000000] transition-all duration-200"
+              disabled={isSubmitting}
+              className="flex-1 py-3 px-6 bg-gray-100 text-gray-700 font-semibold rounded-xl border-2 border-gray-200 hover:bg-gray-200 transition-colors disabled:opacity-50"
             >
               Hủy
             </button>
             <button
               type="submit"
-              className="flex-1 py-3 px-4 bg-[#7B61FF] text-white font-semibold rounded-lg border-2 border-[#002249] shadow-[2px_4px_0px_0px_#000000] hover:shadow-[1px_2px_0px_0px_#000000] transition-all duration-200"
+              disabled={isSubmitting}
+              className="flex-1 py-3 px-6 bg-[#0070F4] text-white font-semibold rounded-xl hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
-              {mode === "add" ? "Thêm" : "Lưu"}
+              {isSubmitting ? (
+                <>
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                  Đang tạo...
+                </>
+              ) : (
+                "Tạo kỷ niệm"
+              )}
             </button>
           </div>
         </form>
       </div>
     </div>
   );
-} 
+}
