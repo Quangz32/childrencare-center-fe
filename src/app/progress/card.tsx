@@ -158,7 +158,7 @@ export default function Card({
             />
             <div className="flex flex-col pl-3 w-3/5">
               <p className="text-black text-sm font-bold">{title}</p>
-              <p className="text-black text-xl break-words">{content}</p>
+              <p className="text-black text-sm break-words">{content}</p>
             </div>
           </div>
         </div>
