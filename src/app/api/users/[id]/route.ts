@@ -20,10 +20,11 @@ export async function GET(
     }
 
     return NextResponse.json({ user: user }, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error in GET user by ID:", error);
+    const errorMessage = error instanceof Error ? error.message : "Internal server error";
     return NextResponse.json(
-      { message: error.message || "Internal server error" },
+      { message: errorMessage },
       { status: 500 }
     );
   }
@@ -37,9 +38,14 @@ export async function PUT(
     await dbConnect();
     
     const { id } = await params;
-    const { fullName, gender, address } = await request.json();
+    const { fullName, phone, address } = await request.json();
     
-    if (!fullName && !gender && !address) {
+    const updateFields: { [key: string]: string } = {};
+    if (fullName) updateFields.fullName = fullName;
+    if (phone) updateFields.phone = phone;
+    if (address) updateFields.address = address;
+
+    if (Object.keys(updateFields).length === 0) {
       return NextResponse.json(
         { message: "No fields to update" },
         { status: 400 }
@@ -48,7 +54,7 @@ export async function PUT(
 
     const updatedUser = await UserModel.findByIdAndUpdate(
       id,
-      { fullName, gender, address },
+      updateFields,
       { new: true }
     );
 
@@ -60,10 +66,11 @@ export async function PUT(
     }
 
     return NextResponse.json(updatedUser, { status: 200 });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error in PUT user:", error);
+    const errorMessage = error instanceof Error ? error.message : "Internal server error";
     return NextResponse.json(
-      { message: error.message || "Internal server error" },
+      { message: errorMessage },
       { status: 500 }
     );
   }

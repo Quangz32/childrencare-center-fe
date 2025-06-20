@@ -1,27 +1,35 @@
 "use client";
 import Layout from "@/components/layout/Layout";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaUserCircle, FaEnvelope, FaPhone, FaMapMarkerAlt, FaTransgender, FaUserTag, FaEdit } from "react-icons/fa";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
-const user = {
-  email: "email12@gmail.com",
-  phone: "01231231233",
-  role: "parent",
-  fullName: "Parent B",
-  gender: "male",
-  address: "Quang Yen, Quang Ninh 1"
-};
+interface UserProfile {
+  _id: string;
+  email: string;
+  phone: string;
+  role: string;
+  fullName: string;
+  gender: string;
+  address: string;
+}
 
 const ProfilePage = () => {
+  const router = useRouter();
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
+
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [isChangePwOpen, setIsChangePwOpen] = useState(false);
-  const [profile, setProfile] = useState(user);
+  
   const [editData, setEditData] = useState({
-    fullName: profile.fullName,
-    phone: profile.phone,
-    address: profile.address,
-    gender: profile.gender,
+    fullName: "",
+    phone: "",
+    address: "",
   });
+
   const [pwData, setPwData] = useState({
     current: "",
     newPw: "",
@@ -29,14 +37,55 @@ const ProfilePage = () => {
   });
   const [pwError, setPwError] = useState("");
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+
+      try {
+        const response = await axios.get("/api/profile", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setProfile(response.data);
+        setEditData({
+          fullName: response.data.fullName,
+          phone: response.data.phone,
+          address: response.data.address,
+        })
+      } catch (err) {
+        setError("Không thể tải thông tin cá nhân. Vui lòng thử lại.");
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [router]);
+
   const handleEditChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setEditData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleEditSave = () => {
-    setProfile((prev) => ({ ...prev, ...editData }));
-    setIsEditOpen(false);
+  const handleEditSave = async () => {
+    if(!profile) return;
+    try {
+      await axios.put(`/api/users/${profile._id}`, {
+        fullName: editData.fullName,
+        phone: editData.phone,
+        address: editData.address,
+      });
+      setProfile((prev) => (prev ? { ...prev, ...editData } : null));
+      setIsEditOpen(false);
+    } catch {
+      alert("Cập nhật hồ sơ thất bại!");
+    }
   };
 
   const handlePwChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -45,17 +94,62 @@ const ProfilePage = () => {
     setPwError("");
   };
 
-  const handlePwSave = () => {
+  const handlePwSave = async () => {
+    if(!profile) return;
     if (pwData.newPw !== pwData.confirm) {
       setPwError("Mật khẩu mới và xác nhận không khớp");
       return;
     }
-    // TODO: Gọi API đổi mật khẩu ở đây nếu cần
-    setIsChangePwOpen(false);
-    setPwData({ current: "", newPw: "", confirm: "" });
-    setPwError("");
-    alert("Đổi mật khẩu thành công (demo)");
+
+    try {
+      const response = await axios.put(
+        `/api/users/${profile._id}/change-password`,
+        {
+          currentPassword: pwData.current,
+          newPassword: pwData.newPw,
+        }
+      );
+
+      if (response.status === 200) {
+        alert("Đổi mật khẩu thành công!");
+        setIsChangePwOpen(false);
+        setPwData({ current: "", newPw: "", confirm: "" });
+        setPwError("");
+      }
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response) {
+        setPwError(
+          error.response.data.message || "Có lỗi xảy ra, vui lòng thử lại."
+        );
+      } else {
+        setPwError("Có lỗi xảy ra, vui lòng thử lại.");
+      }
+    }
   };
+
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="flex justify-center items-center h-screen">
+          <div className="text-xl">Đang tải...</div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <div className="flex justify-center items-center h-screen">
+          <div className="text-red-500 text-xl">{error}</div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (!profile) {
+    return null; // or a message indicating no profile data
+  }
 
   return (
     <Layout>
@@ -128,19 +222,6 @@ const ProfilePage = () => {
                   onChange={handleEditChange}
                   className="w-full border rounded px-3 py-2 text-black"
                 />
-              </div>
-              <div>
-                <label className="block font-semibold mb-1 text-black">Giới tính</label>
-                <select
-                  name="gender"
-                  value={editData.gender}
-                  onChange={handleEditChange}
-                  className="w-full border rounded px-3 py-2 text-black"
-                >
-                  <option value="male">Nam</option>
-                  <option value="female">Nữ</option>
-                  <option value="other">Khác</option>
-                </select>
               </div>
             </div>
             <div className="flex justify-end gap-2 mt-6">
