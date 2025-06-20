@@ -10,6 +10,7 @@ import { CldImage } from "next-cloudinary";
 import Modal, { MemoryData } from "./Modal";
 import { useAuth } from "@/hooks/useAuth";
 import Toast from "@/components/common/Toast";
+import { useToast } from "@/hooks/useToast";
 
 // Tạo danh sách các tuần
 const weeks = [
@@ -21,6 +22,8 @@ const weeks = [
 
 export default function Page() {
   const { apiCall, isAuthenticated, isLoading: authLoading } = useAuth();
+  const { toast, showSuccess, showError, hideToast } = useToast();
+
   const [memories, setMemories] = useState<MemoryData[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentWeek, setCurrentWeek] = useState<{
@@ -38,33 +41,6 @@ export default function Page() {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deletingMemoryId, setDeletingMemoryId] = useState<string>("");
   const [isDeleting, setIsDeleting] = useState(false);
-
-  // Toast states
-  const [toast, setToast] = useState<{
-    message: string;
-    type: "success" | "error" | "warning" | "info";
-    isVisible: boolean;
-  }>({
-    message: "",
-    type: "success",
-    isVisible: false,
-  });
-
-  // Helper function để hiển thị toast
-  const showToast = (
-    message: string,
-    type: "success" | "error" | "warning" | "info"
-  ) => {
-    setToast({
-      message,
-      type,
-      isVisible: true,
-    });
-  };
-
-  const hideToast = () => {
-    setToast((prev) => ({ ...prev, isVisible: false }));
-  };
 
   useEffect(() => {
     // Tính toán tuần hiện tại (từ thứ 2 đến chủ nhật)
@@ -122,7 +98,7 @@ export default function Page() {
       console.log("Fetched memories:", transformedMemories);
     } catch (error) {
       console.error("Error fetching memories:", error);
-      showToast("Có lỗi xảy ra khi tải danh sách kỷ niệm", "error");
+      showError("Có lỗi xảy ra khi tải danh sách kỷ niệm");
     } finally {
       setLoading(false);
     }
@@ -171,7 +147,7 @@ export default function Page() {
   const handleEditMemory = (id: string) => {
     const memoryToEdit = memories.find((memory) => memory.id === id);
     if (!memoryToEdit) {
-      showToast("Không tìm thấy kỷ niệm để chỉnh sửa", "error");
+      showError("Không tìm thấy kỷ niệm để chỉnh sửa");
       return;
     }
 
@@ -207,10 +183,10 @@ export default function Page() {
         prev.filter((memory) => memory.id !== deletingMemoryId)
       );
 
-      showToast("Xóa kỷ niệm thành công!", "success");
+      showSuccess("Xóa kỷ niệm thành công!");
     } catch (error: any) {
       console.error("Error deleting memory:", error);
-      showToast(error.message || "Có lỗi xảy ra khi xóa kỷ niệm", "error");
+      showError(error.message || "Có lỗi xảy ra khi xóa kỷ niệm");
     } finally {
       setIsDeleting(false);
       setShowDeleteConfirm(false);
@@ -493,6 +469,14 @@ export default function Page() {
           </div>
         </div>
       )}
+
+      {/* Toast Notifications */}
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.isVisible}
+        onClose={hideToast}
+      />
     </Layout>
   );
 }

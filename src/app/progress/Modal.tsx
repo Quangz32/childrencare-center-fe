@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useAuth } from "@/hooks/useAuth";
 import Toast from "@/components/common/Toast";
+import { useToast } from "@/hooks/useToast";
 
 interface ModalProps {
   isOpen: boolean;
@@ -31,6 +32,8 @@ export default function Modal({
   editData,
 }: ModalProps) {
   const { apiCall } = useAuth();
+  const { toast, showSuccess, showError, showWarning, hideToast } = useToast();
+
   const [formData, setFormData] = useState<MemoryData>({
     date: "",
     title: "",
@@ -43,33 +46,6 @@ export default function Modal({
   const [uploadProgress, setUploadProgress] = useState(0);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Toast states
-  const [toast, setToast] = useState<{
-    message: string;
-    type: "success" | "error" | "warning" | "info";
-    isVisible: boolean;
-  }>({
-    message: "",
-    type: "success",
-    isVisible: false,
-  });
-
-  // Helper function để hiển thị toast
-  const showToast = (
-    message: string,
-    type: "success" | "error" | "warning" | "info"
-  ) => {
-    setToast({
-      message,
-      type,
-      isVisible: true,
-    });
-  };
-
-  const hideToast = () => {
-    setToast((prev) => ({ ...prev, isVisible: false }));
-  };
 
   useEffect(() => {
     if (isOpen) {
@@ -156,7 +132,7 @@ export default function Modal({
           image: result.memory.image,
         });
 
-        showToast("Tạo kỷ niệm thành công!", "success");
+        showSuccess("Tạo kỷ niệm thành công!");
       } else {
         // Mode edit: gửi request cập nhật
         response = await fetch(`/api/memories/${formData.id}`, {
@@ -183,7 +159,7 @@ export default function Modal({
           image: result.memory.image,
         });
 
-        showToast("Cập nhật kỷ niệm thành công!", "success");
+        showSuccess("Cập nhật kỷ niệm thành công!");
       }
 
       // Đóng modal
@@ -193,10 +169,9 @@ export default function Modal({
         `Error ${mode === "add" ? "creating" : "updating"} memory:`,
         error
       );
-      showToast(
+      showError(
         error.message ||
-          `Có lỗi xảy ra khi ${mode === "add" ? "tạo" : "cập nhật"} kỷ niệm`,
-        "error"
+          `Có lỗi xảy ra khi ${mode === "add" ? "tạo" : "cập nhật"} kỷ niệm`
       );
     } finally {
       setIsSubmitting(false);
@@ -219,13 +194,13 @@ export default function Modal({
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      showToast("Vui lòng chọn file hình ảnh", "warning");
+      showWarning("Vui lòng chọn file hình ảnh");
       return;
     }
 
     // Validate file size (max 10MB theo API)
     if (file.size > 10 * 1024 * 1024) {
-      showToast("File quá lớn. Vui lòng chọn file nhỏ hơn 10MB", "warning");
+      showWarning("File quá lớn. Vui lòng chọn file nhỏ hơn 10MB");
       return;
     }
 

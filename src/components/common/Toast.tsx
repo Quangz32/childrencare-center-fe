@@ -60,7 +60,7 @@ export default function Toast({
   };
 
   return (
-    <div className="fixed top-4 right-4 z-[9999] animate-in slide-in-from-right-full duration-300">
+    <div className="fixed top-4 right-4 z-[9999] transform transition-all duration-300 ease-in-out animate-bounce">
       <div
         className={`${getToastStyles()} text-white p-4 rounded-xl shadow-[2px_4px_0px_0px_#000000] border-2 max-w-sm min-w-[300px]`}
       >
