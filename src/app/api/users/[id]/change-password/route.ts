@@ -4,12 +4,12 @@ import UserModel from "@/models/User";
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await dbConnect();
 
-    const { id } = params;
+    const { id } = await params;
     const { currentPassword, newPassword } = await request.json();
 
     if (!currentPassword || !newPassword) {
