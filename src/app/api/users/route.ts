@@ -20,24 +20,40 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     await dbConnect();
+    const { email, phone, password, role, fullName, gender, address } =
+      await request.json();
 
-    const user = await request.json();
-    console.log("Creating new user:", user);
-
-    if (!user || user === "") {
+    // Check if user already exists
+    const existingUser = await UserModel.findOne({ $or: [{ email }, { phone }] });
+    if (existingUser) {
       return NextResponse.json(
-        { message: "request body is required" },
-        { status: 400 }
+        { message: "User with this email or phone already exists" },
+        { status: 409 }
       );
     }
 
-    const newUser = new UserModel(user);
+    const newUser = new UserModel({
+      email,
+      phone,
+      password, // Storing plain text password
+      role,
+      fullName,
+      gender,
+      address,
+    });
+
     await newUser.save();
-    return NextResponse.json({ user: newUser }, { status: 200 });
-  } catch (error: any) {
-    console.error("Error in POST users:", error);
+
     return NextResponse.json(
-      { message: error.message || "Internal server error" },
+      { message: "User created successfully" },
+      { status: 201 }
+    );
+  } catch (error: unknown) {
+    console.error("Error in POST user:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Internal server error";
+    return NextResponse.json(
+      { message: errorMessage },
       { status: 500 }
     );
   }
