@@ -46,7 +46,8 @@ const Navbar = () => {
           <div className="flex items-center">
             {" "}
             {/* space-x-4 */}
-            <Link href="/" className="flex-shrink-0 flex items-center">
+            {/* Tạm thời để solution*/}
+            <Link href="/solution" className="flex-shrink-0 flex items-center">
               <span className="text-2xl font-bold text-[#002249] whitespace-nowrap">
                 Children Care Center
               </span>
@@ -93,9 +94,21 @@ const Navbar = () => {
                   className="flex items-center cursor-pointer px-4 py-2 rounded-full border border-gray-200 hover:bg-gray-100"
                   onClick={() => setIsDropdownOpen((v) => !v)}
                 >
-                  <span className="font-semibold text-[#0070F4] mr-2">{user?.fullName || "Tài khoản"}</span>
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                  <span className="font-semibold text-[#0070F4] mr-2">
+                    {user?.fullName || "Tài khoản"}
+                  </span>
+                  <svg
+                    className="w-4 h-4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M19 9l-7 7-7-7"
+                    />
                   </svg>
                 </div>
                 {isDropdownOpen && (
@@ -183,10 +196,18 @@ const Navbar = () => {
           {!isLoading && !isAuthenticated && (
             <>
               <Link href="/login">
-                <RoundedButton text="Đăng nhập ngay" onClick={() => setIsMenuOpen(false)} className="mt-2" />
+                <RoundedButton
+                  text="Đăng nhập ngay"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="mt-2"
+                />
               </Link>
               <Link href="/register">
-                <RoundedButton text="Đăng ký tư vấn" onClick={() => setIsMenuOpen(false)} className="mt-2 bg-green-500 hover:bg-green-600" />
+                <RoundedButton
+                  text="Đăng ký tư vấn"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="mt-2 bg-green-500 hover:bg-green-600"
+                />
               </Link>
             </>
           )}

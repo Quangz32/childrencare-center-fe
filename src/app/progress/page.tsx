@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 import { CldImage } from "next-cloudinary";
 import Modal, { MemoryData } from "./Modal";
 import { useAuth } from "@/hooks/useAuth";
+import Toast from "@/components/common/Toast";
+import { useToast } from "@/hooks/useToast";
 
 // Tạo danh sách các tuần
 const weeks = [
@@ -20,14 +22,25 @@ const weeks = [
 
 export default function Page() {
   const { apiCall, isAuthenticated, isLoading: authLoading } = useAuth();
+  const { toast, showSuccess, showError, hideToast } = useToast();
+
   const [memories, setMemories] = useState<MemoryData[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentWeek, setCurrentWeek] = useState<{
     startDate: string;
     endDate: string;
   }>({ startDate: "", endDate: "" });
+
+  // Modal states
   const [showModal, setShowModal] = useState(false);
+  const [modalMode, setModalMode] = useState<"add" | "edit">("add");
   const [selectedDate, setSelectedDate] = useState<string>("");
+  const [editingMemory, setEditingMemory] = useState<MemoryData | null>(null);
+
+  // Delete confirmation states
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [deletingMemoryId, setDeletingMemoryId] = useState<string>("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     // Tính toán tuần hiện tại (từ thứ 2 đến chủ nhật)
@@ -85,7 +98,7 @@ export default function Page() {
       console.log("Fetched memories:", transformedMemories);
     } catch (error) {
       console.error("Error fetching memories:", error);
-      alert("Có lỗi xảy ra khi tải danh sách kỷ niệm");
+      showError("Có lỗi xảy ra khi tải danh sách kỷ niệm");
     } finally {
       setLoading(false);
     }
@@ -122,19 +135,88 @@ export default function Page() {
     });
   };
 
+  // Handler cho Add Memory
   const handleAddMemory = (date: string) => {
+    setModalMode("add");
     setSelectedDate(date);
+    setEditingMemory(null);
     setShowModal(true);
   };
 
+  // Handler cho Edit Memory
+  const handleEditMemory = (id: string) => {
+    const memoryToEdit = memories.find((memory) => memory.id === id);
+    if (!memoryToEdit) {
+      showError("Không tìm thấy kỷ niệm để chỉnh sửa");
+      return;
+    }
+
+    setModalMode("edit");
+    setEditingMemory(memoryToEdit);
+    setSelectedDate(""); // Không cần thiết cho edit
+    setShowModal(true);
+  };
+
+  // Handler cho Delete Memory
+  const handleDeleteMemory = (id: string) => {
+    setDeletingMemoryId(id);
+    setShowDeleteConfirm(true);
+  };
+
+  // Xác nhận xóa
+  const confirmDelete = async () => {
+    if (!deletingMemoryId) return;
+
+    setIsDeleting(true);
+    try {
+      const response = await apiCall(`/api/memories/${deletingMemoryId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Có lỗi xảy ra khi xóa kỷ niệm");
+      }
+
+      // Xóa memory khỏi state local
+      setMemories((prev) =>
+        prev.filter((memory) => memory.id !== deletingMemoryId)
+      );
+
+      showSuccess("Xóa kỷ niệm thành công!");
+    } catch (error: any) {
+      console.error("Error deleting memory:", error);
+      showError(error.message || "Có lỗi xảy ra khi xóa kỷ niệm");
+    } finally {
+      setIsDeleting(false);
+      setShowDeleteConfirm(false);
+      setDeletingMemoryId("");
+    }
+  };
+
+  // Hủy xóa
+  const cancelDelete = () => {
+    setShowDeleteConfirm(false);
+    setDeletingMemoryId("");
+  };
+
   const handleSaveMemory = (data: MemoryData) => {
-    // Thêm memory mới vào danh sách local
-    setMemories((prev) => [...prev, data]);
+    if (modalMode === "add") {
+      // Thêm memory mới vào danh sách local
+      setMemories((prev) => [...prev, data]);
+    } else {
+      // Cập nhật memory trong danh sách local
+      setMemories((prev) =>
+        prev.map((memory) => (memory.id === data.id ? data : memory))
+      );
+    }
   };
 
   const handleCloseModal = () => {
     setShowModal(false);
     setSelectedDate("");
+    setEditingMemory(null);
+    setModalMode("add");
   };
 
   // Tạo danh sách 7 ngày trong tuần hiện tại
@@ -188,8 +270,8 @@ export default function Page() {
           title={existingMemory.title}
           content={existingMemory.content}
           image={existingMemory.image}
-          onEdit={() => {}} // Có thể implement sau
-          onDelete={() => {}} // Có thể implement sau
+          onEdit={handleEditMemory}
+          onDelete={handleDeleteMemory}
         />
       );
     } else {
@@ -330,7 +412,70 @@ export default function Page() {
         onClose={handleCloseModal}
         onSave={handleSaveMemory}
         selectedDate={selectedDate}
-        mode="add"
+        mode={modalMode}
+        editData={editingMemory || undefined}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      {showDeleteConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-auto">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-red-500 to-red-600 p-6 rounded-t-2xl">
+              <div className="flex justify-center items-center">
+                <h2 className="text-white text-2xl font-bold">Xác nhận xóa</h2>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-6">
+              <div className="text-center mb-6">
+                <div className="text-6xl mb-4">🗑️</div>
+                <p className="text-gray-700 text-lg mb-2">
+                  Bạn có chắc chắn muốn xóa kỷ niệm này không?
+                </p>
+                <p className="text-red-600 text-sm">
+                  Hành động này không thể hoàn tác!
+                </p>
+              </div>
+
+              {/* Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  type="button"
+                  onClick={cancelDelete}
+                  disabled={isDeleting}
+                  className="flex-1 py-3 px-6 bg-gray-100 text-gray-700 font-semibold rounded-xl border-2 border-gray-200 hover:bg-gray-200 transition-colors disabled:opacity-50"
+                >
+                  Hủy
+                </button>
+                <button
+                  type="button"
+                  onClick={confirmDelete}
+                  disabled={isDeleting}
+                  className="flex-1 py-3 px-6 bg-red-500 text-white font-semibold rounded-xl hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                >
+                  {isDeleting ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                      Đang xóa...
+                    </>
+                  ) : (
+                    "Xóa kỷ niệm"
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Toast Notifications */}
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.isVisible}
+        onClose={hideToast}
       />
     </Layout>
   );

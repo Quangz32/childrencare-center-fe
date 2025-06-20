@@ -3,6 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { useAuth } from "@/hooks/useAuth";
+import Toast from "@/components/common/Toast";
+import { useToast } from "@/hooks/useToast";
 
 interface ModalProps {
   isOpen: boolean;
@@ -10,6 +12,7 @@ interface ModalProps {
   onSave: (data: MemoryData) => void;
   selectedDate?: string; // Ngày được chọn từ parent component
   mode: "add" | "edit";
+  editData?: MemoryData; // Data để edit
 }
 
 export interface MemoryData {
@@ -26,8 +29,11 @@ export default function Modal({
   onSave,
   selectedDate,
   mode,
+  editData,
 }: ModalProps) {
   const { apiCall } = useAuth();
+  const { toast, showSuccess, showError, showWarning, hideToast } = useToast();
+
   const [formData, setFormData] = useState<MemoryData>({
     date: "",
     title: "",
@@ -43,26 +49,41 @@ export default function Modal({
 
   useEffect(() => {
     if (isOpen) {
-      // Set ngày được chọn từ parent hoặc ngày hiện tại
-      const dateToUse = selectedDate || new Date().toISOString().split("T")[0];
-
-      setFormData({
-        date: dateToUse,
-        title: "",
-        content: "",
-        image: "",
-      });
+      if (mode === "edit" && editData) {
+        // Mode edit: load dữ liệu từ editData
+        setFormData({
+          id: editData.id,
+          date: editData.date,
+          title: editData.title,
+          content: editData.content,
+          image: editData.image || "",
+        });
+      } else {
+        // Mode add: set ngày được chọn từ parent hoặc ngày hiện tại
+        const dateToUse =
+          selectedDate || new Date().toISOString().split("T")[0];
+        setFormData({
+          date: dateToUse,
+          title: "",
+          content: "",
+          image: "",
+        });
+      }
       setSelectedFile(null);
       setErrors({});
     }
-  }, [isOpen, selectedDate]);
+  }, [isOpen, selectedDate, mode, editData]);
 
   const validateForm = (): boolean => {
     const newErrors: { [key: string]: string } = {};
 
     if (!formData.title.trim()) newErrors.title = "Vui lòng nhập tiêu đề";
     if (!formData.content.trim()) newErrors.content = "Vui lòng nhập nội dung";
-    if (!selectedFile) newErrors.image = "Vui lòng chọn ảnh";
+
+    // Chỉ yêu cầu ảnh khi add hoặc khi edit mà không có ảnh cũ
+    if (mode === "add" && !selectedFile) {
+      newErrors.image = "Vui lòng chọn ảnh";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -86,35 +107,72 @@ export default function Modal({
         formDataToSend.append("image", selectedFile);
       }
 
-      // Gửi request tới API sử dụng apiCall từ useAuth
-      const response = await fetch("/api/memories", {
-        method: "POST",
-        headers: getAuthHeaders(),
-        body: formDataToSend,
-      });
+      let response;
+      let result;
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Có lỗi xảy ra khi tạo kỷ niệm");
+      if (mode === "add") {
+        // Gửi request tạo mới
+        response = await fetch("/api/memories", {
+          method: "POST",
+          headers: getAuthHeaders(),
+          body: formDataToSend,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Có lỗi xảy ra khi tạo kỷ niệm");
+        }
+
+        result = await response.json();
+
+        // Gọi callback onSave với data mới
+        onSave({
+          ...formData,
+          id: result.memory._id,
+          image: result.memory.image,
+        });
+
+        showSuccess("Tạo kỷ niệm thành công!");
+      } else {
+        // Mode edit: gửi request cập nhật
+        response = await fetch(`/api/memories/${formData.id}`, {
+          method: "PUT",
+          headers: getAuthHeaders(),
+          body: formDataToSend,
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(
+            errorData.message || "Có lỗi xảy ra khi cập nhật kỷ niệm"
+          );
+        }
+
+        result = await response.json();
+
+        // Gọi callback onSave với data đã cập nhật
+        onSave({
+          id: result.memory._id,
+          date: formData.date,
+          title: result.memory.title,
+          content: result.memory.content,
+          image: result.memory.image,
+        });
+
+        showSuccess("Cập nhật kỷ niệm thành công!");
       }
-
-      const result = await response.json();
-
-      // Gọi callback onSave với data mới
-      onSave({
-        ...formData,
-        id: result.memory._id,
-        image: result.memory.image,
-      });
 
       // Đóng modal
       onClose();
-
-      // Hiển thị thông báo thành công
-      alert("Tạo kỷ niệm thành công!");
     } catch (error: any) {
-      console.error("Error creating memory:", error);
-      alert(error.message || "Có lỗi xảy ra khi tạo kỷ niệm");
+      console.error(
+        `Error ${mode === "add" ? "creating" : "updating"} memory:`,
+        error
+      );
+      showError(
+        error.message ||
+          `Có lỗi xảy ra khi ${mode === "add" ? "tạo" : "cập nhật"} kỷ niệm`
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -136,13 +194,13 @@ export default function Modal({
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      alert("Vui lòng chọn file hình ảnh");
+      showWarning("Vui lòng chọn file hình ảnh");
       return;
     }
 
     // Validate file size (max 10MB theo API)
     if (file.size > 10 * 1024 * 1024) {
-      alert("File quá lớn. Vui lòng chọn file nhỏ hơn 10MB");
+      showWarning("File quá lớn. Vui lòng chọn file nhỏ hơn 10MB");
       return;
     }
 
@@ -197,7 +255,7 @@ export default function Modal({
         <div className="bg-gradient-to-r from-[#FCE646] to-[#FFD700] p-6 rounded-t-2xl border-b-4 border-[#002249]">
           <div className="flex justify-between items-center">
             <h2 className="text-[#002249] text-2xl font-bold">
-              Thêm kỷ niệm mới
+              {mode === "add" ? "Thêm kỷ niệm mới" : "Chỉnh sửa kỷ niệm"}
             </h2>
             <button
               onClick={onClose}
@@ -249,7 +307,7 @@ export default function Modal({
             {/* Image Upload */}
             <div>
               <label className="block text-[#002249] font-semibold mb-2">
-                Hình ảnh *
+                Hình ảnh {mode === "add" ? "*" : "(Tùy chọn)"}
               </label>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -282,7 +340,7 @@ export default function Modal({
                     disabled={isSubmitting}
                     className="bg-[#0070F4] text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Chọn ảnh
+                    {mode === "edit" ? "Thay đổi ảnh" : "Chọn ảnh"}
                   </button>
 
                   <input
@@ -351,15 +409,25 @@ export default function Modal({
               {isSubmitting ? (
                 <>
                   <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                  Đang tạo...
+                  {mode === "add" ? "Đang tạo..." : "Đang cập nhật..."}
                 </>
-              ) : (
+              ) : mode === "add" ? (
                 "Tạo kỷ niệm"
+              ) : (
+                "Cập nhật kỷ niệm"
               )}
             </button>
           </div>
         </form>
       </div>
+
+      {/* Toast Notifications */}
+      <Toast
+        message={toast.message}
+        type={toast.type}
+        isVisible={toast.isVisible}
+        onClose={hideToast}
+      />
     </div>
   );
 }

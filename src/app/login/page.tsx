@@ -35,7 +35,7 @@ export default function LoginPage() {
         throw new Error("Đăng nhập thất bại");
       }
 
-      router.push("/");
+      router.push("/solution");
     } catch {
       setError("Email hoặc mật khẩu không đúng");
     } finally {
