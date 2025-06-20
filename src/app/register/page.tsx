@@ -154,7 +154,6 @@ export default function RegisterPage() {
                   >
                     <option value="male">Nam</option>
                     <option value="female">Nữ</option>
-                    <option value="other">Khác</option>
                   </select>
                 </div>
                 <div>
@@ -170,22 +169,6 @@ export default function RegisterPage() {
                     value={formData.address}
                     onChange={handleChange}
                   />
-                </div>
-                <div>
-                  <label htmlFor="role" className="block text-base sm:text-lg font-medium text-gray-700 mb-1 sm:mb-2">
-                    Vai trò
-                  </label>
-                  <select
-                    id="role"
-                    name="role"
-                    required
-                    className="w-full px-2 py-1 sm:px-3 sm:py-2 text-sm sm:text-base border-2 border-purple-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-black"
-                    value={formData.role}
-                    onChange={handleChange}
-                  >
-                    <option value="parent">Phụ huynh</option>
-                    <option value="teacher">Giáo viên</option>
-                  </select>
                 </div>
               </div>
 
