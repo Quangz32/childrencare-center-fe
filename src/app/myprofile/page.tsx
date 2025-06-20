@@ -85,12 +85,21 @@ const ProfilePage = () => {
 
   const handleEditSave = async () => {
     if (!profile) return;
+    const token = localStorage.getItem("accessToken");
     try {
-      await axios.put(`/api/users/${profile._id}`, {
-        fullName: editData.fullName,
-        phone: editData.phone,
-        address: editData.address,
-      });
+      await axios.put(
+        `/api/users/${profile._id}`,
+        {
+          fullName: editData.fullName,
+          phone: editData.phone,
+          address: editData.address,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       setProfile((prev) => (prev ? { ...prev, ...editData } : null));
       setIsEditOpen(false);
     } catch {
