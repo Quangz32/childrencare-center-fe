@@ -314,9 +314,7 @@ export default function Page() {
             <h2 className="text-2xl font-bold text-[#002249] mb-4">
               Vui lòng đăng nhập để xem kỷ niệm
             </h2>
-            <p className="text-gray-600 mb-6">
-              Bạn cần đăng nhập để truy cập trang này.
-            </p>
+            <p className="text-gray-600 mb-6">Bạn cần đăng nhập để truy cập trang này.</p>
             <button
               onClick={() => (window.location.href = "/login")}
               className="bg-[#0070F4] text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-600 transition-colors"
@@ -346,9 +344,7 @@ export default function Page() {
           </button>
 
           <div className="bg-[#FCE646] border-[4px] border-[#002249] px-6 py-3 rounded-xl shadow-[2px_4px_0px_0px_#000000]">
-            <span className="text-[#002249] text-xl font-bold">
-              {formatWeekRange()}
-            </span>
+            <span className="text-[#002249] text-xl font-bold">{formatWeekRange()}</span>
           </div>
 
           <button
@@ -360,7 +356,7 @@ export default function Page() {
         </div>
 
         {/* Lịch yêu thương */}
-        <div className="flex flex-col shadow-[2px_4px_0px_0px_#000000] rounded-b-[24px]">
+        <div className="mx-[100px] flex flex-col shadow-[2px_4px_0px_0px_#000000] rounded-b-[24px]">
           {/* Header */}
           <div
             className="flex flex-col items-center justify-center bg-[#FCE646] h-[100px]
@@ -392,9 +388,7 @@ export default function Page() {
               {/* 1st card */}
               {displayCards[0]}
               <div className="col-span-1 sm:col-span-1 md:col-span-2 h-[100px] p-4 ">
-                <p className=" text-[#002249] text-xl">
-                  {lichyeuthuongMessage}
-                </p>
+                <p className=" text-[#002249] text-xl">{lichyeuthuongMessage}</p>
               </div>
               {/* 2nd -> 7th card */}
               {displayCards.slice(1).map((card, index) => (
@@ -434,9 +428,7 @@ export default function Page() {
                 <p className="text-gray-700 text-lg mb-2">
                   Bạn có chắc chắn muốn xóa kỷ niệm này không?
                 </p>
-                <p className="text-red-600 text-sm">
-                  Hành động này không thể hoàn tác!
-                </p>
+                <p className="text-red-600 text-sm">Hành động này không thể hoàn tác!</p>
               </div>
 
               {/* Buttons */}

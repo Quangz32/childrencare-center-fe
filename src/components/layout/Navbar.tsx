@@ -48,9 +48,7 @@ const Navbar = () => {
             {/* space-x-4 */}
             {/* Tạm thời để solution*/}
             <Link href="/solution" className="flex-shrink-0 flex items-center">
-              <span className="text-2xl font-bold text-[#002249] whitespace-nowrap">
-                Children Care Center
-              </span>
+              <span className="text-2xl font-bold text-[#002249] whitespace-nowrap">Ánh Dương</span>
             </Link>
           </div>
 
@@ -104,11 +102,7 @@ const Navbar = () => {
                     strokeWidth="2"
                     viewBox="0 0 24 24"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M19 9l-7 7-7-7"
-                    />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
                 {isDropdownOpen && (

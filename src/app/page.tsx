@@ -1,13 +1,12 @@
-import Layout from '@/components/layout/Layout';
-
+import Layout from "@/components/layout/Layout";
+import Page from "./solution/page";
 
 export default function Home() {
-  // const secret = process.env.SECRET;
-  // console.log('Secret Key:', secret);
-
   return (
-    <Layout>
-      <div className="container mx-auto px-4 py-12">
+    // <Layout>
+    <Page /> // Tạm thời để solution
+    // {
+    /* <div className="container mx-auto px-4 py-12">
         <h1 className="text-4xl font-bold text-blue-600 mb-8">Welcome to Children Care Center</h1>
         <p className="text-lg mb-6">
           Providing exceptional childcare services with a focus on health, education, and wellbeing.
@@ -19,7 +18,8 @@ export default function Home() {
             intellectually.
           </p>
         </div>
-      </div>
-    </Layout>
+      </div> */
+    // }
+    // </Layout>
   );
 }
