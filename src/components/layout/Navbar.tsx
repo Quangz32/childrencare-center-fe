@@ -30,10 +30,10 @@ const Navbar = () => {
   }, [isDropdownOpen]);
 
   const navItems = [
-    { name: "Progress", title: "Theo dõi tiến độ", href: "/progress" },
+    { name: "Progress", title: "Hành trình", href: "/progress" },
     { name: "Guides", title: "Hướng dẫn", href: "/guides" },
     { name: "Centers", title: "Trung tâm cho bé", href: "/centers" },
-    { name: "Qa", title: "Trẻ hỏi chuyên gia trả lời", href: "/qa" },
+    { name: "Qa", title: "Hỏi đáp", href: "/qa" },
     { name: "Solution", title: "Giải pháp", href: "/solution" },
   ];
 
@@ -48,7 +48,9 @@ const Navbar = () => {
             {/* space-x-4 */}
             {/* Tạm thời để solution*/}
             <Link href="/solution" className="flex-shrink-0 flex items-center">
-              <span className="text-2xl font-bold text-[#002249] whitespace-nowrap">Ánh Dương</span>
+              <span className="text-2xl font-bold text-[#002249] whitespace-nowrap">
+                Ánh Dương 🌈
+              </span>
             </Link>
           </div>
 

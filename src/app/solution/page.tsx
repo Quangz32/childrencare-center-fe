@@ -8,44 +8,35 @@ import { useState } from 'react';
 // Define the data for solutions
 const solutionsData = [
   {
-    imageSrc: '/images/community/children.png',
-    title: 'Phát triển ngôn ngữ',
-    description: 'Hỗ trợ trẻ phát triển kỹ năng giao tiếp và ngôn ngữ thông qua các hoạt động tương tác.',
-    features: [
-      'Phương pháp ABA hiện đại',
-      'Giáo viên chuyên môn cao',
-      'Chương trình cá nhân hóa'
-    ],
+    imageSrc: "/images/anh_duong_kit.png",
+    title: "Ánh Dương Learning kit",
+    description:
+      "Hỗ trợ trẻ phát triển kỹ năng giao tiếp và ngôn ngữ thông qua các hoạt động tương tác.",
+    features: ["Màu sắc tươi sáng", "Chất liệu an toàn", "Kích thích sáng tạo"],
     rating: 4.8,
     students: 150,
-    established: '2020'
+    established: "2025",
   },
-  {
-    imageSrc: '/images/community/children.png',
-    title: 'Kỹ năng xã hội',
-    description: 'Giúp trẻ phát triển các kỹ năng xã hội cần thiết để tương tác với môi trường xung quanh.',
-    features: [
-      'Hoạt động nhóm đa dạng',
-      'Môi trường thân thiện',
-      'Theo dõi tiến độ chi tiết'
-    ],
-    rating: 4.7,
-    students: 120,
-    established: '2021'
-  },
-  {
-    imageSrc: '/images/community/children.png',
-    title: 'Phát triển nhận thức',
-    description: 'Tăng cường khả năng tư duy và nhận thức thông qua các bài tập phù hợp với lứa tuổi.',
-    features: [
-      'Phương pháp STEM',
-      'Công cụ học tập hiện đại',
-      'Đánh giá định kỳ'
-    ],
-    rating: 4.9,
-    students: 180,
-    established: '2019'
-  }
+  // {
+  //   imageSrc: "/images/community/children.png",
+  //   title: "Kỹ năng xã hội",
+  //   description:
+  //     "Giúp trẻ phát triển các kỹ năng xã hội cần thiết để tương tác với môi trường xung quanh.",
+  //   features: ["Hoạt động nhóm đa dạng", "Môi trường thân thiện", "Theo dõi tiến độ chi tiết"],
+  //   rating: 4.7,
+  //   students: 120,
+  //   established: "2021",
+  // },
+  // {
+  //   imageSrc: "/images/community/children.png",
+  //   title: "Phát triển nhận thức",
+  //   description:
+  //     "Tăng cường khả năng tư duy và nhận thức thông qua các bài tập phù hợp với lứa tuổi.",
+  //   features: ["Phương pháp STEM", "Công cụ học tập hiện đại", "Đánh giá định kỳ"],
+  //   rating: 4.9,
+  //   students: 180,
+  //   established: "2019",
+  // },
 ];
 
 const testimonials = [
