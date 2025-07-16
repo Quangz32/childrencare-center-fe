@@ -66,7 +66,7 @@ export default function RegisterPage() {
                 priority
               />
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-center text-purple-600">
+            <h2 className="text-xl sm:text-2xl font-bold text-center text-black">
               Đăng ký tài khoản Trung tâm Chăm sóc Trẻ em
             </h2>
           </div>
@@ -74,10 +74,10 @@ export default function RegisterPage() {
           {/* Phần form đăng ký */}
           <div className="w-full md:w-1/2 space-y-4 sm:space-y-6">
             <div className="text-center">
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-1 sm:mb-2">
+              <h1 className="text-2xl sm:text-3xl font-bold text-black mb-1 sm:mb-2">
                 Đăng ký
               </h1>
-              <p className="text-base sm:text-lg text-gray-600">
+              <p className="text-base sm:text-lg text-black">
                 Tạo tài khoản để bắt đầu hành trình mới
               </p>
             </div>
@@ -85,7 +85,7 @@ export default function RegisterPage() {
             <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
               <div className="space-y-3 sm:space-y-4">
                 <div>
-                  <label htmlFor="email" className="block text-base sm:text-lg font-medium text-gray-700 mb-1 sm:mb-2">
+                  <label htmlFor="email" className="block text-base sm:text-lg font-medium text-black mb-1 sm:mb-2">
                     Email
                   </label>
                   <input
@@ -99,7 +99,7 @@ export default function RegisterPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="phone" className="block text-base sm:text-lg font-medium text-gray-700 mb-1 sm:mb-2">
+                  <label htmlFor="phone" className="block text-base sm:text-lg font-medium text-black mb-1 sm:mb-2">
                     Số điện thoại
                   </label>
                   <input
@@ -113,7 +113,7 @@ export default function RegisterPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="password" className="block text-base sm:text-lg font-medium text-gray-700 mb-1 sm:mb-2">
+                  <label htmlFor="password" className="block text-base sm:text-lg font-medium text-black mb-1 sm:mb-2">
                     Mật khẩu
                   </label>
                   <input
@@ -127,7 +127,7 @@ export default function RegisterPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="fullName" className="block text-base sm:text-lg font-medium text-gray-700 mb-1 sm:mb-2">
+                  <label htmlFor="fullName" className="block text-base sm:text-lg font-medium text-black mb-1 sm:mb-2">
                     Họ và tên
                   </label>
                   <input
@@ -141,7 +141,7 @@ export default function RegisterPage() {
                   />
                 </div>
                 <div>
-                  <label htmlFor="gender" className="block text-base sm:text-lg font-medium text-gray-700 mb-1 sm:mb-2">
+                  <label htmlFor="gender" className="block text-base sm:text-lg font-medium text-black mb-1 sm:mb-2">
                     Giới tính
                   </label>
                   <select
@@ -157,7 +157,7 @@ export default function RegisterPage() {
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="address" className="block text-base sm:text-lg font-medium text-gray-700 mb-1 sm:mb-2">
+                  <label htmlFor="address" className="block text-base sm:text-lg font-medium text-black mb-1 sm:mb-2">
                     Địa chỉ
                   </label>
                   <input
@@ -174,24 +174,24 @@ export default function RegisterPage() {
 
               {error && (
                 <div className="p-3 sm:p-4 bg-red-50 border-2 border-red-200 rounded-xl">
-                  <p className="text-base sm:text-lg text-red-600 text-center">{error}</p>
+                  <p className="text-base sm:text-lg text-black text-center">{error}</p>
                 </div>
               )}
 
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3 sm:py-4 px-4 sm:px-6 text-base sm:text-lg font-medium text-white bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl shadow-lg hover:from-purple-600 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transform transition-all duration-200 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full py-3 sm:py-4 px-4 sm:px-6 text-base sm:text-lg font-medium text-white bg-blue-600 rounded-xl shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition-all duration-200 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isLoading ? "Đang đăng ký..." : "Đăng ký"}
               </button>
 
               <div className="text-center space-y-2 sm:space-y-4">
-                <p className="text-base sm:text-lg text-gray-600">
+                <p className="text-base sm:text-lg text-black">
                   Đã có tài khoản?{" "}
                   <Link
                     href="/login"
-                    className="font-medium text-purple-600 hover:text-purple-700 transition-colors duration-200"
+                    className="font-medium text-blue-600 hover:text-blue-800 transition-colors duration-200"
                   >
                     Đăng nhập ngay
                   </Link>
