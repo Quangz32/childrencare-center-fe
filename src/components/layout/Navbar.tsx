@@ -34,7 +34,7 @@ const Navbar = () => {
     { name: "Guides", title: "Hướng dẫn", href: "/guides" },
     { name: "Centers", title: "Trung tâm cho bé", href: "/centers" },
     { name: "Qa", title: "Hỏi đáp", href: "/qa" },
-    { name: "Solution", title: "Giải pháp", href: "/solution" },
+    // { name: "Solution", title: "Giải pháp", href: "/solution" },
   ];
 
   const isActive = (path: string) => pathname === path;
@@ -46,8 +46,7 @@ const Navbar = () => {
           <div className="flex items-center">
             {" "}
             {/* space-x-4 */}
-            {/* Tạm thời để solution*/}
-            <Link href="/solution" className="flex-shrink-0 flex items-center">
+            <Link href="/home" className="flex-shrink-0 flex items-center">
               <span className="text-2xl font-bold text-[#002249] whitespace-nowrap">
                 Ánh Dương 🌈
               </span>
@@ -79,13 +78,13 @@ const Navbar = () => {
                     className="min-w-[120px] text-center px-6 py-2 text-base rounded-full bg-blue-600 hover:bg-blue-700 border-2 border-black shadow-lg font-bold transition-all duration-150"
                   />
                 </Link>
-                <Link href="/register">
+                {/* <Link href="/register">
                   <RoundedButton
                     text="Đăng ký tư vấn"
                     onClick={() => {}}
                     className="min-w-[140px] text-center px-6 py-2 text-base rounded-full bg-green-500 hover:bg-green-600 border-2 border-black shadow-lg font-bold transition-all duration-150"
                   />
-                </Link>
+                </Link> */}
               </div>
             )}
             {!isLoading && isAuthenticated && (

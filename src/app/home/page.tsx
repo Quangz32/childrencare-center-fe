@@ -89,14 +89,31 @@ export default function Page() {
       <section className="bg-[#fff] py-16">
         <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
           <div className="md:w-1/2 md:pr-8 mb-8 md:mb-0">
-            <h2 className="text-[#002249] text-4xl font-bold mb-4">Childrencare Center</h2>
-            <h1 className="text-[#002249] text-2xl font-semibold mb-4">Vươn tới ánh dương<br/>Thắp sáng tương lai trẻ thơ</h1>
+            <h2 className="text-[#002249] text-4xl font-bold mb-4">Ánh Dương Learning Kit</h2>
+            <h1 className="text-[#002249] text-2xl font-semibold mb-4">
+              Vươn tới ánh dương
+              <br />
+              Thắp sáng tương lai trẻ thơ
+            </h1>
             <p className="text-[#002249] text-lg mb-6">
-              Bộ giáo trình Ánh Dương là một công cụ giáo dục đa năng được thiết kế để hỗ trợ trẻ em từ 2-8 tuổi (hoặc một độ tuổi cụ thể) bị chậm phát triển hoặc rối loạn phổ tự kỷ.
+              Bộ giáo trình Ánh Dương là một công cụ giáo dục đa năng được thiết kế để hỗ trợ trẻ em
+              từ 2-8 tuổi (hoặc một độ tuổi cụ thể) bị chậm phát triển hoặc rối loạn phổ tự kỷ.
             </p>
             <button className="text-blue-600 font-semibold flex items-center hover:text-blue-700 transition-colors">
-              Xem thêm <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+              Xem thêm{" "}
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4 ml-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 9l-7 7-7-7"
+                />
               </svg>
             </button>
           </div>
@@ -112,14 +129,17 @@ export default function Page() {
           </div>
         </div>
       </section>
-      
+
       {/* Solutions Section */}
       <section className="bg-[#f8f9fa] py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-[#002249] text-3xl font-bold mb-12 text-center">Giải pháp cho trẻ</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {solutionsData.map((solution, index) => (
-              <div key={index} className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow">
+              <div
+                key={index}
+                className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
+              >
                 <div className="relative h-48 w-full mb-6">
                   <Image
                     src={solution.imageSrc}
@@ -142,9 +162,12 @@ export default function Page() {
                     </li>
                   ))}
                 </ul>
-                <button className="text-blue-600 font-semibold hover:text-blue-700 transition-colors">
-                  Tìm hiểu thêm →
-                </button>
+
+                <a href="https://www.facebook.com/profile.php?id=61577325685154" target="_blank">
+                  <button className="text-blue-600 font-semibold hover:text-blue-700 transition-colors">
+                    Liên hệ để được tư vấn →
+                  </button>
+                </a>
               </div>
             ))}
           </div>
@@ -154,7 +177,9 @@ export default function Page() {
       {/* Testimonials Section */}
       <section className="bg-white py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-[#002249] text-3xl font-bold mb-12 text-center">Khách hàng nói gì về chúng tôi</h2>
+          <h2 className="text-[#002249] text-3xl font-bold mb-12 text-center">
+            Khách hàng nói gì về chúng tôi
+          </h2>
           <div className="max-w-4xl mx-auto relative">
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-lg">
               <div className="text-center">
@@ -203,7 +228,7 @@ export default function Page() {
                   key={index}
                   onClick={() => setCurrentTestimonial(index)}
                   className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                    index === currentTestimonial ? 'bg-blue-600' : 'bg-gray-300'
+                    index === currentTestimonial ? "bg-blue-600" : "bg-gray-300"
                   }`}
                 />
               ))}
