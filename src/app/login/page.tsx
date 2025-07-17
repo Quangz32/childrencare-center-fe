@@ -52,7 +52,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-purple-50">
+    <div className="min-h-screen flex items-center justify-center bg-[#FFF8DC]">
       <div className="w-full max-w-4xl p-8 space-y-8 bg-white rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-[1.01]">
         <div className="flex flex-col md:flex-row items-center justify-between gap-8">
           {/* Phần hình ảnh */}
@@ -67,19 +67,22 @@ export default function LoginPage() {
               />
             </div>
             <h2 className="text-2xl font-bold text-center text-black">
-              Chào mừng đến với Trung tâm Chăm sóc Trẻ em
+              Chào mừng đến với Ánh Dương - Người bạn đồng hành của trẻ
+
             </h2>
           </div>
 
           {/* Phần form đăng nhập */}
           <div className="w-full md:w-1/2 space-y-6">
-            <div className="text-center">
-              <h1 className="text-3xl font-bold text-black mb-2">
-                Đăng nhập
-              </h1>
-              <p className="text-lg text-black">
-                Hãy đăng nhập để bắt đầu hành trình vui vẻ
-              </p>
+            <div className="flex flex-col items-center">
+              <div className="text-center">
+                <h1 className="text-3xl font-bold text-black mb-2">
+                  Đăng nhập
+                </h1>
+                <p className="text-lg text-black">
+                  Hãy đăng nhập để bắt đầu hành trình vui vẻ
+                </p>
+              </div>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -151,6 +154,11 @@ export default function LoginPage() {
                     Đăng ký ngay
                   </Link>
                 </p>
+              </div>
+              <div className="flex justify-center mt-4">
+                <Link href="/" className="inline-block border border-black text-blue-600 px-6 py-2 rounded-full font-semibold bg-white hover:bg-blue-50 transition">
+                  Quay về trang chủ
+                </Link>
               </div>
             </form>
           </div>

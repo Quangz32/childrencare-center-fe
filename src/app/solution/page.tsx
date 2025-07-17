@@ -142,7 +142,7 @@ export default function Page() {
                     </li>
                   ))}
                 </ul>
-                <button className="text-blue-600 font-semibold hover:text-blue-700 transition-colors">
+                <button className="text-blue-600 font-semibold hover:text-blue-700 transition-colors" onClick={() => window.open('https://www.facebook.com/profile.php?id=61577325685154', '_blank')}>
                   Tìm hiểu thêm →
                 </button>
               </div>
