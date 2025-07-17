@@ -46,20 +46,26 @@ export default function Page() {
   const [openIndex, setOpenIndex] = useState<number | null>(1);
   const [showAll, setShowAll] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', phone: '', topic: '', question: '' });
-  const [errors, setErrors] = useState<{ email?: string; phone?: string }>({});
-  const [popup, setPopup] = useState<{ email?: string; phone?: string }>({});
+  const [errors, setErrors] = useState<{ email?: string; phone?: string; topic?: string; question?: string }>({});
+  const [popup, setPopup] = useState<{ email?: string; phone?: string; topic?: string; question?: string }>({});
 
   const handleAccordion = (idx: number) => {
     setOpenIndex(openIndex === idx ? null : idx);
   };
 
   const validate = () => {
-    const newErrors: { email?: string; phone?: string } = {};
+    const newErrors: { email?: string; phone?: string; topic?: string; question?: string } = {};
     if (!form.email.match(/^\S+@\S+\.\S+$/)) {
       newErrors.email = 'Email không hợp lệ';
     }
     if (!form.phone.match(/^\d{9,11}$/)) {
       newErrors.phone = 'Số điện thoại không hợp lệ';
+    }
+    if (!form.topic.trim()) {
+      newErrors.topic = 'Vui lòng nhập nội dung này';
+    }
+    if (!form.question.trim()) {
+      newErrors.question = 'Vui lòng nhập câu hỏi';
     }
     setErrors(newErrors);
     // Hiện popup lỗi và tự ẩn sau 2s
@@ -71,6 +77,14 @@ export default function Page() {
       setPopup(p => ({ ...p, phone: newErrors.phone }));
       setTimeout(() => setPopup(p => ({ ...p, phone: undefined })), 2000);
     }
+    if (newErrors.topic) {
+      setPopup(p => ({ ...p, topic: newErrors.topic }));
+      setTimeout(() => setPopup(p => ({ ...p, topic: undefined })), 2000);
+    }
+    if (newErrors.question) {
+      setPopup(p => ({ ...p, question: newErrors.question }));
+      setTimeout(() => setPopup(p => ({ ...p, question: undefined })), 2000);
+    }
     return Object.keys(newErrors).length === 0;
   };
 
@@ -79,10 +93,25 @@ export default function Page() {
     setErrors({ ...errors, [e.target.name]: undefined });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    alert('Gửi thành công!');
+    try {
+      const res = await fetch('/api/questions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        alert('Gửi thành công!');
+        setForm({ name: '', email: '', phone: '', topic: '', question: '' });
+      } else {
+        alert(data.message || 'Có lỗi xảy ra!');
+      }
+    } catch (err) {
+      alert('Không thể gửi câu hỏi.');
+    }
   };
 
   return (
@@ -188,17 +217,27 @@ export default function Page() {
                 type="text"
                 name="topic"
                 placeholder="Bạn có muốn được tư vấn trực tiếp hay không?"
-                className="text-gray-500 font-bold border border-black rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                className={`text-gray-500 font-bold border border-black rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 ${errors.topic ? 'border-red-500' : ''}`}
                 value={form.topic}
                 onChange={handleChange}
               />
+              {popup.topic && (
+                <div className="absolute z-10 mt-1 ml-2 bg-red-500 text-white text-xs rounded px-3 py-1 shadow animate-fade-in">
+                  {popup.topic}
+                </div>
+              )}
               <textarea
                 name="question"
                 placeholder="Hãy cho chúng mình biết thắc mắc của bạn?"
-                className="text-gray-500 font-bold border border-black rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 min-h-[60px]"
+                className={`text-gray-500 font-bold border border-black rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400 min-h-[60px] ${errors.question ? 'border-red-500' : ''}`}
                 value={form.question}
                 onChange={handleChange}
               />
+              {popup.question && (
+                <div className="absolute z-10 mt-1 ml-2 bg-red-500 text-white text-xs rounded px-3 py-1 shadow animate-fade-in">
+                  {popup.question}
+                </div>
+              )}
               <button type="submit" className="bg-blue-600 border-2 border-black text-white h-11 mb-2 px-6 py-1.5 rounded-3xl font-semibold hover:bg-blue-700 transition mt-2 mx-auto">Gửi câu hỏi</button>
             </form>
           </div>

@@ -22,7 +22,8 @@ export async function middleware(request: NextRequest) {
     "/api/auth/login",
     "/api/auth/register", 
     "/api/hello",
-    "/api/upload" // Allow uploads for now, can be restricted later
+    "/api/upload", // Allow uploads for now, can be restricted later
+    "/api/questions" // Allow questions for now, can be restricted later
   ];
 
   if (publicRoutes.some(route => pathname.startsWith(route))) {
