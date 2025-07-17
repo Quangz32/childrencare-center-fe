@@ -11,7 +11,8 @@ const videos = [
     authorDesc: 'Youtuber | Chuyên gia',
     desc: 'NHỮNG HOẠT ĐỘNG DẠY TRẺ TỰ KỶ TĂNG CƯỜNG KĨ NĂNG GIAO TIẾP VÀ TƯƠNG TÁC',
     img: '/images/video1.png',
-    link: 'https://www.youtube.com/watch?v=p-lCwaBJNSQ'
+    link: 'https://www.youtube.com/watch?v=p-lCwaBJNSQ',
+    bgColor: 'bg-[#FFF8DC]'
   },
   {
     id: 2,
@@ -20,7 +21,8 @@ const videos = [
     authorDesc: 'Youtuber | Chuyên gia',
     desc: 'NHỮNG HOẠT ĐỘNG DẠY TRẺ TỰ KỶ TĂNG CƯỜNG KĨ NĂNG GIAO TIẾP VÀ TƯƠNG TÁC',
     img: '/images/video2.png',
-    link: 'https://www.youtube.com/watch?v=W4RuUWYISRA'
+    link: 'https://www.youtube.com/watch?v=W4RuUWYISRA',
+    bgColor: 'bg-[#FFF8DC]'
   },
   {
     id: 3,
@@ -29,7 +31,8 @@ const videos = [
     authorDesc: 'Youtuber | Chuyên gia',
     desc: 'NHỮNG HOẠT ĐỘNG DẠY TRẺ TỰ KỶ TĂNG CƯỜNG KĨ NĂNG GIAO TIẾP VÀ TƯƠNG TÁC',
     img: '/images/video3.png',
-    link: 'https://www.youtube.com/watch?v=CWYY8NmC9us'
+    link: 'https://www.youtube.com/watch?v=CWYY8NmC9us',
+    bgColor: 'bg-[#FFF8DC]'
   },
   // Lặp lại cho đủ 9 video mẫu
   {
@@ -39,7 +42,8 @@ const videos = [
     authorDesc: 'Youtuber | Chuyên gia',
     desc: 'NHỮNG HOẠT ĐỘNG DẠY TRẺ TỰ KỶ TĂNG CƯỜNG KĨ NĂNG GIAO TIẾP VÀ TƯƠNG TÁC',
     img: '/images/video4.png',
-    link: 'https://www.youtube.com/watch?v=cm_6_EjxMxA'
+    link: 'https://www.youtube.com/watch?v=cm_6_EjxMxA',
+    bgColor: 'bg-[#FFF8DC]'
   },
   {
     id: 5,
@@ -48,7 +52,8 @@ const videos = [
     authorDesc: 'Youtuber | Chuyên gia',
     desc: 'NHỮNG HOẠT ĐỘNG DẠY TRẺ TỰ KỶ TĂNG CƯỜNG KĨ NĂNG GIAO TIẾP VÀ TƯƠNG TÁC',
     img: '/images/video5.png',
-    link: 'https://www.youtube.com/watch?v=_-CWTRzFCEM'
+    link: 'https://www.youtube.com/watch?v=_-CWTRzFCEM',
+    bgColor: 'bg-[#FFF8DC]'
   },
   {
     id: 6,
@@ -57,7 +62,8 @@ const videos = [
     authorDesc: 'Youtuber | Chuyên gia',
     desc: 'NHỮNG HOẠT ĐỘNG DẠY TRẺ TỰ KỶ TĂNG CƯỜNG KĨ NĂNG GIAO TIẾP VÀ TƯƠNG TÁC',
     img: '/images/video6.png',
-    link: 'https://www.youtube.com/watch?v=7VHix-Y3VMY&list=PL51yT_tQ0lzuCaiZw-GXVY0sCG8d_L34P&index=2'
+    link: 'https://www.youtube.com/watch?v=7VHix-Y3VMY&list=PL51yT_tQ0lzuCaiZw-GXVY0sCG8d_L34P&index=2',
+    bgColor: 'bg-[#FFF8DC]'
   },
   {
     id: 7,
@@ -66,7 +72,8 @@ const videos = [
     authorDesc: 'Youtuber | Chuyên gia',
     desc: 'NHỮNG HOẠT ĐỘNG DẠY TRẺ TỰ KỶ TĂNG CƯỜNG KĨ NĂNG GIAO TIẾP VÀ TƯƠNG TÁC',
     img: '/images/video7.png',
-    link: 'https://www.youtube.com/watch?v=Rs0JmrNWztw&list=PL51yT_tQ0lzuCaiZw-GXVY0sCG8d_L34P&index=3'
+    link: 'https://www.youtube.com/watch?v=Rs0JmrNWztw&list=PL51yT_tQ0lzuCaiZw-GXVY0sCG8d_L34P&index=3',
+    bgColor: 'bg-[#FFF8DC]'
   },
   {
     id: 8,
@@ -75,7 +82,8 @@ const videos = [
     authorDesc: 'Youtuber | Chuyên gia',
     desc: 'NHỮNG HOẠT ĐỘNG DẠY TRẺ TỰ KỶ TĂNG CƯỜNG KĨ NĂNG GIAO TIẾP VÀ TƯƠNG TÁC',
     img: '/images/video8.png',
-    link: 'https://www.youtube.com/watch?v=D0Wm4Sq6pDQ&list=PL51yT_tQ0lzuCaiZw-GXVY0sCG8d_L34P&index=9'
+    link: 'https://www.youtube.com/watch?v=D0Wm4Sq6pDQ&list=PL51yT_tQ0lzuCaiZw-GXVY0sCG8d_L34P&index=9',
+    bgColor: 'bg-[#FFF8DC]'
   },
   {
     id: 9,
@@ -84,7 +92,8 @@ const videos = [
     authorDesc: 'Youtuber | Chuyên gia',
     desc: 'NHỮNG HOẠT ĐỘNG DẠY TRẺ TỰ KỶ TĂNG CƯỜNG KĨ NĂNG GIAO TIẾP VÀ TƯƠNG TÁC',
     img: '/images/video9.png',
-    link: 'https://www.youtube.com/watch?v=MQ8o4e5NQBc&list=PLJNeH5W6RuLmPwA0ko-E0D-RdQi--EjvY'
+    link: 'https://www.youtube.com/watch?v=MQ8o4e5NQBc&list=PLJNeH5W6RuLmPwA0ko-E0D-RdQi--EjvY',
+    bgColor: 'bg-[#FFF8DC]'
   },
 ];
 
@@ -128,7 +137,7 @@ export default function Page() {
                       href={video.link}
                       target="_blank" 
                       rel="noopener noreferrer"
-                      className="bg-white border border-r-4 border-b-4 border-black rounded-xl shadow-sm p-3 flex flex-col hover:shadow-xl transition-all duration-300 ease-in-out hover:-translate-y-2 hover:scale-[1.02] cursor-pointer"
+                      className={`border border-r-4 border-b-4 border-black rounded-xl shadow-sm p-3 flex flex-col hover:shadow-xl transition-all duration-300 ease-in-out hover:-translate-y-2 hover:scale-[1.02] cursor-pointer ${video.bgColor}`}
                     >
                       <div className="relative w-full h-40 mb-3 rounded-lg overflow-hidden">
                         <img src={video.img} alt={video.title} className="object-cover w-full h-full" />
