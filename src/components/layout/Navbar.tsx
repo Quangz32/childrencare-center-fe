@@ -34,7 +34,7 @@ const Navbar = () => {
     { name: "Guides", title: "Hướng dẫn", href: "/guides" },
     { name: "Centers", title: "Trung tâm cho bé", href: "/centers" },
     { name: "Qa", title: "Hỏi đáp", href: "/qa" },
-    { name: "Solution", title: "Giải pháp", href: "/solution" },
+    // { name: "Solution", title: "Giải pháp", href: "/solution" },
   ];
 
   const isActive = (path: string) => pathname === path;
@@ -46,8 +46,7 @@ const Navbar = () => {
           <div className="flex items-center">
             {" "}
             {/* space-x-4 */}
-            {/* Tạm thời để solution*/}
-            <Link href="/solution" className="flex-shrink-0 flex items-center">
+            <Link href="/home" className="flex-shrink-0 flex items-center">
               <span className="text-2xl font-bold text-[#002249] whitespace-nowrap">
                 Ánh Dương 🌈
               </span>

@@ -1,5 +1,5 @@
 import Layout from "@/components/layout/Layout";
-import Page from "./solution/page";
+import Page from "./home/page";
 
 export default function Home() {
   return (
