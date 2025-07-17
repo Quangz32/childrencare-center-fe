@@ -89,7 +89,7 @@ export default function Page() {
       <section className="bg-[#fff] py-16">
         <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
           <div className="md:w-1/2 md:pr-8 mb-8 md:mb-0">
-            <h2 className="text-[#002249] text-4xl font-bold mb-4">Childrencare Center</h2>
+            <h2 className="text-[#002249] text-4xl font-bold mb-4">Ánh Dương Learning Kit</h2>
             <h1 className="text-[#002249] text-2xl font-semibold mb-4">
               Vươn tới ánh dương
               <br />

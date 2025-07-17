@@ -78,13 +78,13 @@ const Navbar = () => {
                     className="min-w-[120px] text-center px-6 py-2 text-base rounded-full bg-blue-600 hover:bg-blue-700 border-2 border-black shadow-lg font-bold transition-all duration-150"
                   />
                 </Link>
-                <Link href="/register">
+                {/* <Link href="/register">
                   <RoundedButton
                     text="Đăng ký tư vấn"
                     onClick={() => {}}
                     className="min-w-[140px] text-center px-6 py-2 text-base rounded-full bg-green-500 hover:bg-green-600 border-2 border-black shadow-lg font-bold transition-all duration-150"
                   />
-                </Link>
+                </Link> */}
               </div>
             )}
             {!isLoading && isAuthenticated && (
