@@ -54,7 +54,7 @@ export default function RegisterPage() {
   return (
     <div className="min-h-screen flex flex-col justify-center p-2 sm:p-4" style={{ background: '#FFF8DC' }}>
       <div className="flex-grow flex items-center justify-center">
-        <div className="w-full max-w-4xl p-4 sm:p-8 space-y-4 sm:space-y-8 bg-white rounded-2xl shadow-lg transform transition-all duration-300 hover:scale-[1.01]">
+        <div className="w-full max-w-4xl p-4 sm:p-8 space-y-4 sm:space-y-8 bg-white rounded-3xl shadow-lg transform transition-all duration-300 hover:scale-[1.01]">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4 sm:gap-8">
             {/* Phần hình ảnh */}
             <div className="w-full md:w-1/2 space-y-4 sm:space-y-6">
@@ -93,7 +93,7 @@ export default function RegisterPage() {
                       name="email"
                       type="email"
                       required
-                      className="w-full px-2 py-1 sm:px-3 sm:py-2 text-sm sm:text-base border-2 border-purple-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-black"
+                      className="w-full px-2 py-1 sm:px-3 sm:py-2 text-sm sm:text-base border-2 border-purple-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-black"
                       value={formData.email}
                       onChange={handleChange}
                     />
@@ -107,7 +107,7 @@ export default function RegisterPage() {
                       name="phone"
                       type="tel"
                       required
-                      className="w-full px-2 py-1 sm:px-3 sm:py-2 text-sm sm:text-base border-2 border-purple-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-black"
+                      className="w-full px-2 py-1 sm:px-3 sm:py-2 text-sm sm:text-base border-2 border-purple-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-black"
                       value={formData.phone}
                       onChange={handleChange}
                     />
@@ -121,7 +121,7 @@ export default function RegisterPage() {
                       name="password"
                       type="password"
                       required
-                      className="w-full px-2 py-1 sm:px-3 sm:py-2 text-sm sm:text-base border-2 border-purple-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-black"
+                      className="w-full px-2 py-1 sm:px-3 sm:py-2 text-sm sm:text-base border-2 border-purple-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-black"
                       value={formData.password}
                       onChange={handleChange}
                     />
@@ -135,7 +135,7 @@ export default function RegisterPage() {
                       name="fullName"
                       type="text"
                       required
-                      className="w-full px-2 py-1 sm:px-3 sm:py-2 text-sm sm:text-base border-2 border-purple-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-black"
+                      className="w-full px-2 py-1 sm:px-3 sm:py-2 text-sm sm:text-base border-2 border-purple-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-black"
                       value={formData.fullName}
                       onChange={handleChange}
                     />
@@ -148,7 +148,7 @@ export default function RegisterPage() {
                       id="gender"
                       name="gender"
                       required
-                      className="w-full px-2 py-1 sm:px-3 sm:py-2 text-sm sm:text-base border-2 border-purple-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-black"
+                      className="w-full px-2 py-1 sm:px-3 sm:py-2 text-sm sm:text-base border-2 border-purple-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-black"
                       value={formData.gender}
                       onChange={handleChange}
                     >
@@ -165,7 +165,7 @@ export default function RegisterPage() {
                       name="address"
                       type="text"
                       required
-                      className="w-full px-2 py-1 sm:px-3 sm:py-2 text-sm sm:text-base border-2 border-purple-200 rounded-xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-black"
+                      className="w-full px-2 py-1 sm:px-3 sm:py-2 text-sm sm:text-base border-2 border-purple-200 rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-black"
                       value={formData.address}
                       onChange={handleChange}
                     />
@@ -179,12 +179,12 @@ export default function RegisterPage() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full py-3 sm:py-4 px-4 sm:px-6 text-base sm:text-lg font-medium text-white bg-blue-600 rounded-xl shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition-all duration-200 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-3 sm:py-4 px-4 sm:px-6 text-base sm:text-lg font-medium text-white bg-blue-600 rounded-2xl shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition-all duration-200 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? "Đang đăng ký..." : "Đăng ký"}
                 </button>
                 <div className="flex justify-center mt-4">
-                  <Link href="/" className="inline-block border border-black text-blue-600 px-6 py-2 rounded-full font-semibold bg-white hover:bg-blue-50 transition">
+                  <Link href="/" className="inline-block border border-black text-blue-600 px-6 py-2 rounded-2xl font-semibold bg-white hover:bg-blue-50 transition">
                     Quay về trang chủ
                   </Link>
                 </div>
