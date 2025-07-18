@@ -162,12 +162,9 @@ export default function Page() {
                     </li>
                   ))}
                 </ul>
-
-                <a href="https://www.facebook.com/profile.php?id=61577325685154" target="_blank">
-                  <button className="text-blue-600 font-semibold hover:text-blue-700 transition-colors">
-                    Liên hệ để được tư vấn →
-                  </button>
-                </a>
+                <button className="text-blue-600 font-semibold hover:text-blue-700 transition-colors" onClick={() => window.open('https://www.facebook.com/profile.php?id=61577325685154', '_blank')}>
+                  Tìm hiểu thêm →
+                </button>
               </div>
             ))}
           </div>
