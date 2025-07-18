@@ -285,7 +285,7 @@ export default function CentersPage() {
             </div>
 
             <div className="max-w-4xl mx-auto relative">
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-lg">
+              <div className="bg-[#FFF8DC] from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-lg">
                 <div className="text-center">
                   <img
                     src={testimonials[currentTestimonial].avatar}

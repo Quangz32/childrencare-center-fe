@@ -17,26 +17,26 @@ const solutionsData = [
     students: 150,
     established: "2025",
   },
-  // {
-  //   imageSrc: "/images/community/children.png",
-  //   title: "Kỹ năng xã hội",
-  //   description:
-  //     "Giúp trẻ phát triển các kỹ năng xã hội cần thiết để tương tác với môi trường xung quanh.",
-  //   features: ["Hoạt động nhóm đa dạng", "Môi trường thân thiện", "Theo dõi tiến độ chi tiết"],
-  //   rating: 4.7,
-  //   students: 120,
-  //   established: "2021",
-  // },
-  // {
-  //   imageSrc: "/images/community/children.png",
-  //   title: "Phát triển nhận thức",
-  //   description:
-  //     "Tăng cường khả năng tư duy và nhận thức thông qua các bài tập phù hợp với lứa tuổi.",
-  //   features: ["Phương pháp STEM", "Công cụ học tập hiện đại", "Đánh giá định kỳ"],
-  //   rating: 4.9,
-  //   students: 180,
-  //   established: "2019",
-  // },
+  {
+    imageSrc: "/images/community/children.png",
+    title: "Kỹ năng xã hội",
+    description:
+      "Giúp trẻ phát triển các kỹ năng xã hội cần thiết để tương tác với môi trường xung quanh.",
+    features: ["Hoạt động nhóm đa dạng", "Môi trường thân thiện", "Theo dõi tiến độ chi tiết"],
+    rating: 4.7,
+    students: 120,
+    established: "2021",
+  },
+  {
+    imageSrc: "/images/community/children.png",
+    title: "Phát triển nhận thức",
+    description:
+      "Tăng cường khả năng tư duy và nhận thức thông qua các bài tập phù hợp với lứa tuổi.",
+    features: ["Phương pháp STEM", "Công cụ học tập hiện đại", "Đánh giá định kỳ"],
+    rating: 4.9,
+    students: 180,
+    established: "2019",
+  },
 ];
 
 const testimonials = [
@@ -89,41 +89,24 @@ export default function Page() {
       <section className="bg-[#fff] py-16">
         <div className="container mx-auto px-4 flex flex-col md:flex-row items-center">
           <div className="md:w-1/2 md:pr-8 mb-8 md:mb-0">
-            <h2 className="text-[#002249] text-4xl font-bold mb-4">Ánh Dương Learning Kit</h2>
-            <h1 className="text-[#002249] text-2xl font-semibold mb-4">
-              Vươn tới ánh dương
-              <br />
-              Thắp sáng tương lai trẻ thơ
-            </h1>
+            <h1 className="text-[#002249] text-5xl font-bold mb-4">Childrencare Center</h1>
+            <h2 className="text-[#002249] text-2xl font-semibold mb-4">
+              Vươn tới ánh dương<br/>Thắp sáng tương lai trẻ thơ
+            </h2>
             <p className="text-[#002249] text-lg mb-6">
-              Bộ giáo trình Ánh Dương là một công cụ giáo dục đa năng được thiết kế để hỗ trợ trẻ em
-              từ 2-8 tuổi (hoặc một độ tuổi cụ thể) bị chậm phát triển hoặc rối loạn phổ tự kỷ.
+              Bộ giáo trình Ánh Dương là một công cụ giáo dục đa năng được thiết kế để hỗ trợ trẻ em từ 2-8 tuổi (hoặc một độ tuổi cụ thể) bị chậm phát triển hoặc rối loạn phổ tự kỷ.
             </p>
-            <button className="text-blue-600 font-semibold flex items-center hover:text-blue-700 transition-colors">
-              Xem thêm{" "}
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4 ml-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
+            <button className="bg-blue-600 text-white font-semibold px-6 py-3 rounded-full border-2 border-blue-800 shadow hover:bg-blue-700 transition-colors">
+              Tìm hiểu bộ giáo trình
             </button>
           </div>
           <div className="md:w-1/2">
-            <div className="relative h-[400px] w-full">
+            <div className="relative h-[400px] w-full rounded-2xl border-2 border-[#e6e6d6] shadow-lg bg-[#fcfbe9] p-4">
               <Image
                 src="/images/community/children.png"
                 alt="Childrencare Center Solutions"
                 fill
-                className="object-cover rounded-lg"
+                className="object-cover rounded-xl border border-r-4 border-b-4 border-black"
               />
             </div>
           </div>
@@ -178,7 +161,7 @@ export default function Page() {
             Khách hàng nói gì về chúng tôi
           </h2>
           <div className="max-w-4xl mx-auto relative">
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-lg">
+            <div className="bg-[#FFF8DC] from-blue-50 to-indigo-50 rounded-2xl p-8 shadow-lg">
               <div className="text-center">
                 <img
                   src={testimonials[currentTestimonial].avatar}
