@@ -35,7 +35,7 @@ export default function LoginPage() {
         throw new Error("Đăng nhập thất bại");
       }
 
-      router.push("/solution");
+      router.push("/");
     } catch {
       setError("Email hoặc mật khẩu không đúng");
     } finally {
@@ -67,7 +67,7 @@ export default function LoginPage() {
               />
             </div>
             <h2 className="text-2xl font-bold text-center text-black">
-              Chào mừng đến với Trung tâm Chăm sóc Trẻ em
+              Chào mừng đến với Ánh Dương
             </h2>
           </div>
 

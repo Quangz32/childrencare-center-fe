@@ -67,7 +67,7 @@ export default function RegisterPage() {
               />
             </div>
             <h2 className="text-xl sm:text-2xl font-bold text-center text-black">
-              Đăng ký tài khoản Trung tâm Chăm sóc Trẻ em
+              Đăng ký tài khoản Ánh Dương
             </h2>
           </div>
 
