@@ -182,12 +182,7 @@ export default function RegisterPage() {
                   className="w-full py-3 sm:py-4 px-4 sm:px-6 text-base sm:text-lg font-medium text-white bg-blue-600 rounded-2xl shadow-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transform transition-all duration-200 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? "Đang đăng ký..." : "Đăng ký"}
-                </button>
-                <div className="flex justify-center mt-4">
-                  <Link href="/" className="inline-block border border-black text-blue-600 px-6 py-2 rounded-2xl font-semibold bg-white hover:bg-blue-50 transition">
-                    Quay về trang chủ
-                  </Link>
-                </div>
+                </button>            
                 <div className="text-center space-y-2 sm:space-y-4">
                   <p className="text-base sm:text-lg text-black">
                     Đã có tài khoản?{' '}
@@ -198,6 +193,11 @@ export default function RegisterPage() {
                       Đăng nhập ngay
                     </Link>
                   </p>
+                </div>
+                <div className="flex justify-center mt-4">
+                  <Link href="/" className="inline-block border border-black text-blue-600 px-6 py-2 rounded-2xl font-semibold bg-white hover:bg-blue-50 transition">
+                    Quay về trang chủ
+                  </Link>
                 </div>
               </form>
             </div>

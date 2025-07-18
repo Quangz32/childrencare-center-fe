@@ -139,12 +139,12 @@ export default function LoginPage() {
               </button>
 
               <div className="text-center space-y-4">
-                <Link
+                {/* <Link
                   href="/forgot-password"
                   className="text-lg text-blue-600 hover:text-blue-800 transition-colors duration-200"
                 >
                   Quên mật khẩu?
-                </Link>
+                </Link> */}
                 <p className="text-lg text-black">
                   Chưa có tài khoản?{" "}
                   <Link

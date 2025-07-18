@@ -18,25 +18,25 @@ const solutionsData = [
     established: "2025",
   },
   {
-    imageSrc: "/images/community/children.png",
-    title: "Kỹ năng xã hội",
+    imageSrc: "/images/anh_duong_kit2.png",
+    title: "Ánh Dương Learning kit 2",
     description:
-      "Giúp trẻ phát triển các kỹ năng xã hội cần thiết để tương tác với môi trường xung quanh.",
-    features: ["Hoạt động nhóm đa dạng", "Môi trường thân thiện", "Theo dõi tiến độ chi tiết"],
+      "Tăng cường khả năng tư duy và nhận thức thông qua bộ kit.",
+    features: ["Phương pháp STEM", "Công cụ học tập hiện đại", "Đánh giá định kỳ"],
     rating: 4.7,
     students: 120,
-    established: "2021",
+    established: "2025",
   },
-  {
-    imageSrc: "/images/community/children.png",
-    title: "Phát triển nhận thức",
-    description:
-      "Tăng cường khả năng tư duy và nhận thức thông qua các bài tập phù hợp với lứa tuổi.",
-    features: ["Phương pháp STEM", "Công cụ học tập hiện đại", "Đánh giá định kỳ"],
-    rating: 4.9,
-    students: 180,
-    established: "2019",
-  },
+  // {
+  //   imageSrc: "/images/community/children.png",
+  //   title: "Phát triển nhận thức",
+  //   description:
+  //     "Tăng cường khả năng tư duy và nhận thức thông qua các bài tập phù hợp với lứa tuổi.",
+  //   features: ["Phương pháp STEM", "Công cụ học tập hiện đại", "Đánh giá định kỳ"],
+  //   rating: 4.9,
+  //   students: 180,
+  //   established: "2019",
+  // },
 ];
 
 const testimonials = [
@@ -96,7 +96,7 @@ export default function Page() {
             <p className="text-[#002249] text-lg mb-6">
               Bộ giáo trình Ánh Dương là một công cụ giáo dục đa năng được thiết kế để hỗ trợ trẻ em từ 2-8 tuổi (hoặc một độ tuổi cụ thể) bị chậm phát triển hoặc rối loạn phổ tự kỷ.
             </p>
-            <button className="bg-blue-600 text-white font-semibold px-6 py-3 rounded-full border-2 border-blue-800 shadow hover:bg-blue-700 transition-colors">
+            <button className="bg-blue-600 text-white font-semibold px-6 py-3 rounded-full border-2 border-blue-800 shadow hover:bg-blue-700 transition-colors" onClick={() => window.open('https://www.facebook.com/profile.php?id=61577325685154', '_blank')}>
               Tìm hiểu bộ giáo trình
             </button>
           </div>
@@ -117,13 +117,13 @@ export default function Page() {
       <section className="bg-[#f8f9fa] py-16">
         <div className="container mx-auto px-4">
           <h2 className="text-[#002249] text-3xl font-bold mb-12 text-center">Giải pháp cho trẻ</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {solutionsData.map((solution, index) => (
               <div
                 key={index}
                 className="bg-white rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
               >
-                <div className="relative h-48 w-full mb-6">
+                <div className="relative h-80 w-full mb-6">
                   <Image
                     src={solution.imageSrc}
                     alt={solution.title}
