@@ -117,7 +117,7 @@ export default function CentersPage() {
   });
 
   return (
-    <div className="flex flex-col min-h-screen bg-[#FFF8DC]">
+    <div className="flex flex-col min-h-screen bg-white">
       <Navbar />
       <main className="flex-grow">
         <div className="py-8 px-4 sm:px-6">
@@ -179,7 +179,7 @@ export default function CentersPage() {
             <div className="max-w-6xl mx-auto">
               <div className="grid gap-8">
                 {filteredCenters.map((center, index) => (
-                  <div key={index} className="bg-white border-2 border-black rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group hover:-translate-y-2 hover:scale-[1.02]">
+                  <div key={index} className="bg-[#FFF8DC] border-2 border-black rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group hover:-translate-y-2 hover:scale-[1.02]">
                     <div className="flex flex-col lg:flex-row">
                       {/* Image Section */}
                       <div className="lg:w-1/3 relative overflow-hidden">
